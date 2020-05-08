@@ -3,6 +3,11 @@
     <color name="colorPrimary">#225077</color>
     <color name="colorPrimaryDark">#00284B</color>
     <color name="colorAccent">#00284B</color>
-    //colors menu
+<!--    //colors menu-->
     <color name="colorWhiteText">#F4F3F0</color>
+<!--    //colors material design-->
+    <color name="colorButtonRed">#F44336</color>
+    <color name="colorButtonYellow">#FFC107</color>
+    <color name="my_app_primary_variant_color">#FFFFFF</color>
+    <color name="my_app_color_on_primary">#FFFFFF</color>
 </resources>

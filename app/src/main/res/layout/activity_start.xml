@@ -1,71 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context=".ui.StartActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/imgMainScreen"
-        android:layout_width="411dp"
-        android:layout_height="416dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/mainscreen" />
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="startVM"
+            type="com.marlem.livesapp.viewmodel.StartViewModel" />
+    </data>
 
-    <TableRow
-        android:id="@+id/tableRow3"
-        android:layout_width="410dp"
-        android:layout_height="69dp"
-        android:layout_marginTop="1dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgMainScreen">
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Live safe....."
-            android:textSize="30sp" />
-    </TableRow>
-
-    <TableRow
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableRow3">
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="210dp"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/cherry_cream_soda"
-            android:text="Sign In"
-            android:textSize="25sp">
-        </com.google.android.material.button.MaterialButton>
+        android:background="@color/colorWhiteText"
+        tools:context=".ui.StartActivity">
 
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="210dp"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/cherry_cream_soda"
-            android:text="Sign In"
-            android:textSize="25sp" />
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="196dp"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/cherry_cream_soda"
-            android:text="Login"
-            android:textSize="25sp">
-        </com.google.android.material.button.MaterialButton>
+        <ImageView
+            android:id="@+id/imgMainScreen"
+            android:layout_width="412dp"
+            android:layout_height="475dp"
+            app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/background_image" />
 
-        <Button
-            android:id="@+id/button5"
-            android:layout_width="196dp"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/cherry_cream_soda"
-            android:text="Login"
-            android:textSize="25sp" />
-    </TableRow>
+        <TableLayout
+            android:id="@+id/tableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgMainScreen">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TableRow
+                android:id="@+id/tableRow"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/txtStartName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/aclonica"
+                    android:text="@string/live_safe"
+                    android:textSize="35sp" />
+
+                <ImageView
+                    android:id="@+id/imgStartLogo"
+                    android:layout_width="100dp"
+                    android:layout_height="99dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/logosz" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/glStartButtons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <Button
+                    android:id="@+id/btnStartSignin"
+                    android:background="@color/colorButtonRed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/aclonica"
+                    android:text="@string/sign_in"
+                    android:textSize="25sp"
+                    />
+
+                <Button
+                    android:id="@+id/btnStartLogin"
+                    android:background="@color/colorButtonYellow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/aclonica"
+                    android:text="@string/login"
+                    android:textSize="25sp" />
+            </TableRow>
+        </TableLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
