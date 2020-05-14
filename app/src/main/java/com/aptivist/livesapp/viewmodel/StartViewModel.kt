@@ -1,9 +1,9 @@
-package com.marlem.livesapp.viewmodel
+package com.aptivist.livesapp.viewmodel
 
 import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.ViewModel
-import com.marlem.livesapp.ui.SigninActivity
+import com.aptivist.livesapp.ui.SigninActivity
 import kotlinx.coroutines.*
 
 class StartViewModel : ViewModel() {

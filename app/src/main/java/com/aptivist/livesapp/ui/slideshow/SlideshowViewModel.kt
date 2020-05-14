@@ -1,4 +1,4 @@
-package com.marlem.livesapp.ui.slideshow
+package com.aptivist.livesapp.ui.slideshow
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

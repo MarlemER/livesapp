@@ -1,10 +1,10 @@
-package com.marlem.livesapp.ui
+package com.aptivist.livesapp.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import com.marlem.livesapp.R
+import com.aptivist.livesapp.R
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : AppCompatActivity() {

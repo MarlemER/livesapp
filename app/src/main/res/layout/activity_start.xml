@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="startVM"
-            type="com.marlem.livesapp.viewmodel.StartViewModel" />
+            type="com.aptivist.livesapp.viewmodel.StartViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

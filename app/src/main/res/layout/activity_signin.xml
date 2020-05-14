@@ -155,7 +155,7 @@
                     android:gravity="right"
                     android:orientation="horizontal">
 
-                    <com.google.android.material.button.MaterialButton
+                    <!--<com.google.android.material.button.MaterialButton
                         android:id="@+id/btnSigninFace"
                         style="@style/Widget.MaterialComponents.Button.Icon"
                         android:layout_width="50dp"
@@ -164,7 +164,16 @@
                         android:gravity="right"
                         app:cornerRadius="30sp"
                         app:icon="@drawable/com_facebook_button_login_logo"
-                        app:iconGravity="end"></com.google.android.material.button.MaterialButton>
+                        app:iconGravity="end"></com.google.android.material.button.MaterialButton>-->
+
+                    <com.facebook.login.widget.LoginButton
+                        android:id="@+id/btnLoginFacebook"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:layout_marginTop="5sp"
+                        android:layout_marginBottom="20sp"
+                        android:textSize="17sp"></com.facebook.login.widget.LoginButton>
 
                 </LinearLayout>
 

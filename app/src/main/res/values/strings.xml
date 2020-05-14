@@ -31,4 +31,9 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="gender">Gender:</string>
+
+    //Facebook API
+    <string name="facebook_app_id">719560682122675</string>
+    <string name="fb_login_protocol_scheme">fb719560682122675</string>
+
 </resources>
