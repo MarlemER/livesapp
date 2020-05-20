@@ -1,4 +1,4 @@
-package com.aptivist.livesapp.di
+package com.aptivist.livesapp.di.implementation
 
 import dagger.Module
 import dagger.Provides
