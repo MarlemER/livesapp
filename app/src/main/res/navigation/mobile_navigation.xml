@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/nav_profile"
-        android:name="com.aptivist.livesapp.ui.home.HomeFragment"
+        android:name="com.aptivist.livesapp.ui.profile.ProfileFragment"
         android:label="@string/menu_profile"
-        tools:layout="@layout/fragment_home">
+        tools:layout="@layout/fragment_profile">
 
         <action
             android:id="@+id/action_HomeFragment_to_HomeSecondFragment"
@@ -17,9 +17,9 @@
     </fragment>
     <fragment
         android:id="@+id/nav_home_second"
-        android:name="com.marlem.livesapp.ui.home.HomeSecondFragment"
+        android:name="com.aptivist.livesapp.ui.profile.ProfileFragment"
         android:label="@string/home_principal"
-        tools:layout="@layout/fragment_home_second">
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_HomeSecondFragment_to_HomeFragment"
             app:destination="@id/nav_profile" />
@@ -31,13 +31,13 @@
 
     <fragment
         android:id="@+id/nav_indicators"
-        android:name="com.aptivist.livesapp.ui.gallery.GalleryFragment"
+        android:name="com.aptivist.livesapp.ui.indicator.SettingFragment"
         android:label="@string/menu_indicators"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_indicator" />
 
     <fragment
         android:id="@+id/nav_statistics"
-        android:name="com.aptivist.livesapp.ui.slideshow.SlideshowFragment"
+        android:name="com.aptivist.livesapp.ui.statistic.StatisticFragment"
         android:label="@string/menu_statistics"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_statistic" />
 </navigation>
