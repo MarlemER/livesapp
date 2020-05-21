@@ -1,4 +1,4 @@
-package com.aptivist.livesapp.ui
+package com.aptivist.livesapp.ui.signin
 
 import android.content.Intent
 import android.net.Uri
@@ -6,8 +6,14 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.Observable
+import androidx.databinding.Observable.OnPropertyChangedCallback
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.aptivist.livesapp.MainActivity
-import com.aptivist.livesapp.R
+import com.aptivist.livesapp.databinding.ActivitySigninBinding
+import com.aptivist.livesapp.model.SigninModel
 import com.facebook.*
 import com.facebook.login.LoginResult
 import com.google.android.gms.tasks.OnCompleteListener
@@ -18,6 +24,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_signin.*
 import kotlinx.android.synthetic.main.activity_start.*
+import com.aptivist.livesapp.R
+import java.util.*
+import android.text.TextUtils
+import androidx.lifecycle.observe
 
 
 class SigninActivity : AppCompatActivity() {
@@ -26,20 +36,83 @@ class SigninActivity : AppCompatActivity() {
     lateinit var firebaseAuth: FirebaseAuth
     lateinit var authStateListener: FirebaseAuth.AuthStateListener
     lateinit var accessTokenTraker: AccessTokenTracker
+    lateinit var signinViewModel: SigninViewModel
+    lateinit var dataBinding: ActivitySigninBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_signin)
+        //setContentView(R.layout.activity_signin)
+
+
+
+
+       //intancia del vm
+        signinViewModel = ViewModelProviders.of(this).get(SigninViewModel::class.java)
+
+        dataBinding = DataBindingUtil.setContentView<ActivitySigninBinding>(this,R.layout.activity_signin)
+        dataBinding.lifecycleOwner = this
+
+        dataBinding.viewModelSignin = signinViewModel
+
+        validationText()
+
+
         //printKeyHash()
         //Instance Firebase
         firebaseAuth = FirebaseAuth.getInstance()
         callbackManager = CallbackManager.Factory.create()
 
+       /* btnSignin.setOnClickListener {
+            validationText()
+        }*/
+
+
         btnLoginFacebook.setReadPermissions("email", "public_profile")
         btnLoginFacebook.setOnClickListener {
             signIn()
         }
+
     }
+
+
+
+fun newValidation(){
+        signinViewModel.getLoginFields().observe(this,object:Observer<SigninModel>{
+            override fun onChanged(signInModel: SigninModel?) {
+                Toast.makeText(this@SigninActivity,
+                    "Email " + signInModel?.user + ", Password " + signInModel?.password,
+                    Toast.LENGTH_SHORT).show();
+            }
+        })
+}
+
+
+    fun validationText(){
+        signinViewModel.OnClicSignin(edtSigninEmail.text.toString(),edtSigninPassword.text.toString())
+        signinViewModel.emailUser.observe(this, object : Observer<String>{
+
+            override fun onChanged(t: String?) {
+                Toast.makeText(this@SigninActivity,"Error",Toast.LENGTH_SHORT).show()
+                /*if (TextUtils.isEmpty(Objects.requireNonNull(t))) {
+                    dataBinding.edtSigninEmail.setError("Enter an E-Mail Address");
+                    dataBinding.edtSigninEmail.requestFocus();
+                }*/
+            }
+        })
+    }
+
+
+
+
+    fun validationText2(){
+        signinViewModel.OnClicSignin(edtSigninEmail.text.toString(),edtSigninPassword.text.toString())
+                signinViewModel.emailUser.observe(this, Observer<String>{
+                    if(it==""){
+                    dataBinding.edtSigninEmail.setError("Enter an E-Mail Address")
+                    Log.d("WWWW","null")}
+                })
+    }
+
 
     private fun signIn(){
         btnLoginFacebook.registerCallback(callbackManager,object: FacebookCallback<LoginResult> {
@@ -176,7 +249,7 @@ class SigninActivity : AppCompatActivity() {
 
     fun createAccount()
     {
-        firebaseAuth.createUserWithEmailAndPassword(edtSigninEmail.editText.toString(),edtSigninPassword.text.toString())
+        firebaseAuth.createUserWithEmailAndPassword(edtSigninEmail.text.toString(),edtSigninPassword.text.toString())
             .addOnCompleteListener (this,object:OnCompleteListener<AuthResult>
             {
                 override fun onComplete(task: Task<AuthResult>) {

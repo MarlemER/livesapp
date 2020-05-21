@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.aptivist.livesapp.R
+import com.aptivist.livesapp.ui.signin.SigninActivity
 import kotlinx.android.synthetic.main.activity_start.*
 import kotlinx.coroutines.*
 
