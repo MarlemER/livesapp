@@ -1,55 +1,30 @@
 package com.aptivist.livesapp.ui.signin
 
+import android.service.autofill.UserData
+import android.text.TextUtils
 import android.util.Log
+import android.util.Patterns
+import androidx.databinding.Observable
+import androidx.databinding.ObservableChar
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.aptivist.livesapp.model.SigninModel
+import com.aptivist.livesapp.helpers.EnumUser
+import com.aptivist.livesapp.viewmodel.BaseViewModel
+import java.util.*
 
 
-class SigninViewModel:ViewModel() {
+class SigninViewModel:BaseViewModel() {
      var emailUser:MutableLiveData<String> = MutableLiveData()
      var passUser:MutableLiveData<String> = MutableLiveData()
-     var userMutableLiveData: MutableLiveData<SigninModel>? = null
 
     fun OnClicSignin(emailUser:String,passUser:String) {
-        /*if (emailUser != null && passUser != null) {
-            var userValidation = SigninModel(emailUser, passUser)
-        } else {
-
-        }*/
-        Log.d("PRUEBA",emailUser.plus(passUser))
-        //getLoginFields()
-       // isInputValid(emailUser,passUser)
+        this.emailUser.value = emailUser
+        this.passUser.value = passUser
+        //Log.d("PRUEBA",emailUser.plus(passUser))
     }
 
     fun OnClicFacebook(){
 
     }
-
-
-   /* fun isInputValid(emailUser: String,passUser: String):Boolean{
-        return emailUser.isValid(emailUser, emailUser.length == 0)
-    }*/
-
-    /*fun getLoginFields():MutableLiveData<Boolean> {
-        return MutableLiveData(true)
-
-    }*/
-
-    fun getLoginFields(): MutableLiveData<SigninModel> {
-        if (userMutableLiveData == null) {
-            userMutableLiveData = MutableLiveData()
-        }
-        return userMutableLiveData as MutableLiveData<SigninModel>
-        //return getLoginFields()
-    }
-
-    /*private fun isInputValid(emailUser:String,passUser:String): Boolean {
-
-        if(emailUser.isEmpty()&&passUser.isEmpty()){
-
-        }
-
-    }*/
 
 }

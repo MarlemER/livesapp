@@ -25,12 +25,7 @@ class StartActivity : AppCompatActivity() {
 
     fun onSignInClick()
     {
-        val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-        uiScope.launch {
-            withContext(Dispatchers.Main){
                 startActivity(Intent(this@StartActivity, SigninActivity::class.java))
-            }
-        }
     }
     /*fun startLoginFacebook(){
         FacebookSdk.sdkInitialize(applicationContext)
