@@ -18,4 +18,5 @@ class MainApplication:Application() {
         //inicializate myComponent
         myComponent = initDagger(this)
     }
+
 }

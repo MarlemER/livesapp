@@ -1,15 +1,13 @@
 package com.aptivist.livesapp.di.module
 
+import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
 @Module
 class SingletonModule {
-   // @Provides
-    //@Singleton
-    /*fun apiClient()
-    Privides
-    singleton
-    fun gsonHelper():Gson = Gson()*/
+    @Provides
+    @Singleton
+    fun authUser() = FirebaseAuth.getInstance()
 }

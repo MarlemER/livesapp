@@ -81,7 +81,9 @@ dependencies {
     //Animations adobe effects
     implementation "com.airbnb.android:lottie:$lottie_version"
     //Lifecycle ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
     //Dependencies for coroutines.
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"

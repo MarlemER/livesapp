@@ -3,7 +3,7 @@ package com.aptivist.livesapp.viewmodel
 import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.ViewModel
-import com.aptivist.livesapp.ui.SigninActivity
+import com.aptivist.livesapp.ui.signin.SigninActivity
 import kotlinx.coroutines.*
 
 class StartViewModel : ViewModel() {
