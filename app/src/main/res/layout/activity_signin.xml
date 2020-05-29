@@ -65,8 +65,7 @@
                             android:id="@+id/edtSigninEmail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="textEmailAddress"
-                            android:text="@{viewModelSignin.emailUser}"></com.google.android.material.textfield.TextInputEditText>
+                            android:inputType="textEmailAddress"></com.google.android.material.textfield.TextInputEditText>
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -81,8 +80,7 @@
                             android:id="@+id/edtSigninPassword"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="textPassword"
-                            android:text="@{viewModelSignin.passUser}"></com.google.android.material.textfield.TextInputEditText>
+                            android:inputType="textPassword"></com.google.android.material.textfield.TextInputEditText>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <LinearLayout
@@ -135,7 +133,7 @@
                             app:cornerRadius="1sp"
                             app:icon="@drawable/ic_next"
                             app:iconGravity="end"
-                            android:onClick="@{()->viewModelSignin.OnClicSignin(edtSigninEmail.getText().toString(),edtSigninPassword.getText().toString())}"></com.google.android.material.button.MaterialButton>
+                            ></com.google.android.material.button.MaterialButton>
 
                     </LinearLayout>
 
