@@ -102,4 +102,11 @@ dependencies {
     implementation "com.squareup.picasso:picasso:$picasso_version"
     //Circular images
     implementation "de.hdodenhof:circleimageview:$circularImage_version"
+    implementation 'com.google.firebase:firebase-firestore:21.4.3'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+
+    //Koin dependencyInjections
+    implementation "org.koin:koin-android:$koin_version"
+    implementation "org.koin:koin-android-scope:$koin_version"
+    implementation "org.koin:koin-android-viewmodel:$koin_version"
 }

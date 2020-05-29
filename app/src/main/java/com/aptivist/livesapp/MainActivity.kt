@@ -15,6 +15,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.aptivist.livesapp.helpers.Constants
+import com.aptivist.livesapp.model.UserData
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -51,7 +53,10 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        getProfile_Facebook()
+
+        val user : UserData = intent.extras?.get(Constants.USER) as UserData
+
+        getProfile_Facebook(user)
 
     }
 
@@ -66,13 +71,16 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    fun getProfile_Facebook(){
+
+    fun getProfile_Facebook(user : UserData){
+
         view = navView.getHeaderView(0)
         var NameProfile:TextView = view.findViewById(R.id.txtNameProfileUser)
-        NameProfile.text = intent.getStringExtra("nameFacebook_Profile")?:"No name"
+        NameProfile.text = user.userUser?:"No name"
         var EmailProfile:TextView = view.findViewById(R.id.txtEmailProfileUser)
-        EmailProfile.text = intent.getStringExtra("emailFacebook_Profile")?:"No email"
+        EmailProfile.text = user.emailUser?:"No email"
         var PhotoProfile:ImageView = view.findViewById(R.id.imgProfileUser)
         Picasso.get().load(intent.getStringExtra("photoUrlFacebook_Profile")?:"No photo").resize(250,250).centerCrop().into(PhotoProfile)
+
     }
 }

@@ -1,22 +1,17 @@
 package com.aptivist.livesapp.di.implementation
 
 import com.aptivist.livesapp.helpers.EnumUser
-import com.aptivist.livesapp.repository.dao.FirebaseRepository
+import com.aptivist.livesapp.interfaces.ISessionUser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import dagger.Module
-import javax.inject.Inject
 
-
-@Module
-class SessionUserImpl @Inject constructor (private val auth: FirebaseAuth):FirebaseRepository {
+open class UserSessionImpl(private val auth: FirebaseAuth): ISessionUser {
     override fun getUser(): FirebaseUser? {
         return auth.currentUser
     }
 
-    override fun getUsrStatus(): EnumUser? {
+    override fun getUserStatus(): EnumUser? {
         val user = getUser()
         return if(user!=null) EnumUser.Signed else EnumUser.Unsigned
     }
-
 }
