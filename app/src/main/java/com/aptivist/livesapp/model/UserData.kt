@@ -10,8 +10,9 @@ data class UserData (
     var passwordUser: String?,
     var isAuthenticated: Boolean?,
     var isNew: Boolean?,
-    var isCreated: Boolean?
-): Parcelable {
+    var isCreated: Boolean?,
+    var photoUser:String?
+):Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString(),
@@ -19,10 +20,10 @@ data class UserData (
         parcel.readString(),
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
-        parcel.readValue(Boolean::class.java.classLoader) as? Boolean
+        parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
+        parcel.readString()
     ) {
     }
-
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(uid)
@@ -32,6 +33,7 @@ data class UserData (
         parcel.writeValue(isAuthenticated)
         parcel.writeValue(isNew)
         parcel.writeValue(isCreated)
+        parcel.writeString(photoUser)
     }
 
     override fun describeContents(): Int {

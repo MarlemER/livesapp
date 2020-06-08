@@ -96,8 +96,8 @@ dependencies {
     //Facebook API.
     implementation "com.facebook.android:facebook-android-sdk:$sdkFacebook_version"
     //DependencyInyections.
-    implementation "com.google.dagger:dagger:$dagger_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    /*implementation "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"*/
     //Picasso; images
     implementation "com.squareup.picasso:picasso:$picasso_version"
     //Circular images

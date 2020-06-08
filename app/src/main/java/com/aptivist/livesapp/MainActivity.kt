@@ -4,9 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -15,21 +17,27 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.aptivist.livesapp.di.interfaces.IFirebaseInstance
 import com.aptivist.livesapp.helpers.Constants
+import com.aptivist.livesapp.helpers.Constants.Companion.PHOTO_USER_DEFAULT
 import com.aptivist.livesapp.model.UserData
+import com.aptivist.livesapp.ui.splash.SplashActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.nav_header_main.*
+import org.koin.android.ext.android.inject
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var name:String
     private lateinit var navView:NavigationView
     private lateinit var view:View
+
+    val firebaseCredential: IFirebaseInstance by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,14 +63,15 @@ class MainActivity : AppCompatActivity() {
 
 
         val user : UserData = intent.extras?.get(Constants.USER) as UserData
+        getDataProfile(user)
 
-        getProfile_Facebook(user)
+        navView.setNavigationItemSelectedListener(this)
 
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main, menu)
+        //menuInflater.inflate(R.menu.main, menu)
         return true
     }
 
@@ -71,16 +80,31 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-
-    fun getProfile_Facebook(user : UserData){
-
+    fun getDataProfile(user : UserData){
         view = navView.getHeaderView(0)
         var NameProfile:TextView = view.findViewById(R.id.txtNameProfileUser)
-        NameProfile.text = user.userUser?:"No name"
+        NameProfile.text = user.userUser?:"livesapp"
         var EmailProfile:TextView = view.findViewById(R.id.txtEmailProfileUser)
-        EmailProfile.text = user.emailUser?:"No email"
+        EmailProfile.text = user.emailUser?:"livesapp@support.com"
         var PhotoProfile:ImageView = view.findViewById(R.id.imgProfileUser)
-        Picasso.get().load(intent.getStringExtra("photoUrlFacebook_Profile")?:"No photo").resize(250,250).centerCrop().into(PhotoProfile)
-
+        Picasso.get().load( (user.photoUser)?:PHOTO_USER_DEFAULT).resize(250,250).centerCrop().into(PhotoProfile)
     }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId)
+        {
+            R.id.nav_logout -> item.setOnMenuItemClickListener { logout() }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    fun logout():Boolean
+    {
+        firebaseCredential.getFirebaseAuth().signOut()
+        startActivity(Intent(this,SplashActivity::class.java))
+        Toast.makeText(this, "Logout succes", Toast.LENGTH_SHORT).show()
+        finish()
+       return true
+    }
+
 }

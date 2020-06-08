@@ -1,13 +1,14 @@
-package com.aptivist.livesapp.ui.splash
+package com.aptivist.livesapp.ui.start
 
 import androidx.lifecycle.LiveData
 import com.aptivist.livesapp.di.interfaces.IFirebaseInstance
 import com.aptivist.livesapp.model.UserData
+import com.aptivist.livesapp.ui.splash.SplashRepository
 import com.aptivist.livesapp.viewmodel.BaseViewModel
 import org.koin.java.KoinJavaComponent.inject
 
 
-class SplashViewModel : BaseViewModel() {
+class StartViewModel : BaseViewModel() {
 
     var firebaseAccess:IFirebaseInstance? = null
     var splashRepository = SplashRepository(firebaseAccess)

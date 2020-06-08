@@ -7,19 +7,19 @@
         <import type="android.view.View" />
         <variable
             name="startVM"
-            type="com.aptivist.livesapp.viewmodel.StartViewModel" />
+            type="com.aptivist.livesapp.ui.start.StartViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorWhiteText"
-        tools:context=".ui.StartActivity">
+        tools:context=".ui.start.StartActivity">
 
         <ImageView
             android:id="@+id/imgMainScreen"
-            android:layout_width="412dp"
-            android:layout_height="475dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/tableLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -73,25 +73,16 @@
                     android:orientation="vertical" />
 
                 <Button
-                    android:id="@+id/btnStartSignin"
+                    android:id="@+id/btnStart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:background="@color/colorButtonRed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="80dp"
-                    android:layout_weight="1"
                     android:fontFamily="@font/aclonica"
-                    android:text="@string/sign_in"
-                    android:textSize="25sp"
-                    />
-
-                <Button
-                    android:id="@+id/btnStartLogin"
-                    android:background="@color/colorButtonYellow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="80dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/aclonica"
-                    android:text="@string/login"
+                    android:text="@string/start"
+                    android:onClick="@{() -> startVM.checkIfUserIsAuthenticated()}"
                     android:textSize="25sp" />
+
             </TableRow>
         </TableLayout>
 

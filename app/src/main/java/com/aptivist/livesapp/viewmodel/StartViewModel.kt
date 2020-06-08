@@ -3,7 +3,7 @@ package com.aptivist.livesapp.viewmodel
 import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.ViewModel
-import com.aptivist.livesapp.ui.signin.SigninActivity
+import com.aptivist.livesapp.ui.signin.LoginActivity
 import kotlinx.coroutines.*
 
 class StartViewModel : ViewModel() {
@@ -19,7 +19,7 @@ class StartViewModel : ViewModel() {
     fun onSignInClick(activity: Activity) {
         uiscope.launch {
             withContext(Dispatchers.Main) {
-                activity.startActivity(Intent(activity, SigninActivity::class.java))
+                activity.startActivity(Intent(activity, LoginActivity::class.java))
             }
         }
     }
