@@ -1,8 +1,7 @@
-package com.aptivist.livesapp
+package com.aptivist.livesapp.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -12,22 +11,25 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.aptivist.livesapp.R
+import com.aptivist.livesapp.databinding.ActivitySigninBinding
 import com.aptivist.livesapp.di.interfaces.IFirebaseInstance
 import com.aptivist.livesapp.helpers.Constants
 import com.aptivist.livesapp.helpers.Constants.Companion.PHOTO_USER_DEFAULT
 import com.aptivist.livesapp.model.UserData
+import com.aptivist.livesapp.ui.signin.SigninViewModel
 import com.aptivist.livesapp.ui.splash.SplashActivity
+import com.facebook.login.LoginManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_main.view.*
-import kotlinx.android.synthetic.main.nav_header_main.*
 import org.koin.android.ext.android.inject
 
 
@@ -36,12 +38,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navView:NavigationView
     private lateinit var view:View
-
-    val firebaseCredential: IFirebaseInstance by inject()
+    lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
@@ -54,18 +58,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navView = findViewById(R.id.nav_view)
 
         val navController = findNavController(R.id.nav_host_fragment)
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.nav_profile, R.id.nav_indicators, R.id.nav_statistics), drawerLayout)
+            R.id.nav_profile,
+            R.id.nav_indicators,
+            R.id.nav_statistics
+        ), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        navView.setNavigationItemSelectedListener(this)
 
         val user : UserData = intent.extras?.get(Constants.USER) as UserData
         getDataProfile(user)
 
-        navView.setNavigationItemSelectedListener(this)
 
     }
 
@@ -80,7 +88,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    fun getDataProfile(user : UserData){
+    private fun getDataProfile(user : UserData){
         view = navView.getHeaderView(0)
         var NameProfile:TextView = view.findViewById(R.id.txtNameProfileUser)
         NameProfile.text = user.userUser?:"livesapp"
@@ -88,23 +96,29 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         EmailProfile.text = user.emailUser?:"livesapp@support.com"
         var PhotoProfile:ImageView = view.findViewById(R.id.imgProfileUser)
         Picasso.get().load( (user.photoUser)?:PHOTO_USER_DEFAULT).resize(250,250).centerCrop().into(PhotoProfile)
+        Toast.makeText(this,"Login successful",Toast.LENGTH_LONG).show()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId)
         {
-            R.id.nav_logout -> item.setOnMenuItemClickListener { logout() }
+            R.id.nav_logout -> item.setOnMenuItemClickListener {
+                logout()
+                true
+            }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    fun logout():Boolean
+    private fun logout()
     {
-        firebaseCredential.getFirebaseAuth().signOut()
+        /*firebaseCredential.getFirebaseAuth().signOut()
+        LoginManager.getInstance().logOut()*/
+        mainViewModel.logout()
+
         startActivity(Intent(this,SplashActivity::class.java))
-        Toast.makeText(this, "Logout succes", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Logout success", Toast.LENGTH_SHORT).show()
         finish()
-       return true
     }
 
 }

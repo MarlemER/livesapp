@@ -15,42 +15,29 @@ import kotlinx.android.synthetic.main.activity_start.*
 
 class StartActivity : AppCompatActivity() {
 
-    private var startViewModel: StartViewModel? = null
+    //private var startViewModel: StartViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        startViewModel = ViewModelProviders.of(this).get(StartViewModel::class.java)
+        //startViewModel = ViewModelProviders.of(this).get(StartViewModel::class.java)
         setContentView(R.layout.activity_start)
 
        //checkIfUserIsAuthenticated()
-        btnStart.setOnClickListener {  checkIfUserIsAuthenticated()}
+        btnStart.setOnClickListener {  goToLoginActivity() }
     }
 
-
+/*
     private fun checkIfUserIsAuthenticated() {
         startViewModel?.checkIfUserIsAuthenticated()
         startViewModel?.isUserAuthenticatedLiveData?.observe(this, Observer { user ->
-            if (user.isAuthenticated!!) {
-                goToSigninActivity()
-                finish()
-            } else {
-                goToLoginActivity(user)
-                finish()
-            }
+            goToLoginActivity()
+            finish()
         })
-    }
+    }*/
 
-
-    private fun goToLoginActivity(user: UserData) {
-        val intent = Intent(this@StartActivity, LoginActivity::class.java)
-        intent.putExtra(Constants.USER, user)
+    private fun goToLoginActivity() {
+        val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
-    }
-
-    private fun goToSigninActivity()
-    {
-        startActivity(Intent(this, SigninActivity::class.java))
-        finish()
     }
 }

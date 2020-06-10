@@ -71,7 +71,6 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edtSigninEmail"
                             android:layout_width="match_parent"
-                            android:text="@{viewModelLogin.emailLogin}"
                             android:layout_height="wrap_content"
                             android:inputType="textEmailAddress"></com.google.android.material.textfield.TextInputEditText>
 
@@ -88,7 +87,6 @@
                             android:id="@+id/edtSigninPassword"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@{viewModelLogin.passLogin}"
                             android:inputType="textPassword"></com.google.android.material.textfield.TextInputEditText>
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -139,20 +137,34 @@
                             android:layout_marginTop="5sp"
                             android:gravity="center"
                             android:text="@string/login"
-                            app:cornerRadius="1sp"
+                            app:cornerRadius="5sp"
                             app:icon="@drawable/ic_next"
                             app:iconGravity="end"
-                            android:onClick="@{() -> viewModelLogin.validationUser()}"
                             ></com.google.android.material.button.MaterialButton>
 
+                    </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <com.facebook.login.widget.LoginButton
+                            android:id="@+id/btnLoginFacebookLogin"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:layout_marginTop="5sp"
+                            android:text="login"
+                            android:layout_marginBottom="20sp"
+                            android:textSize="17sp"></com.facebook.login.widget.LoginButton>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:layout_marginTop="10sp"
+                        android:layout_marginBottom="10sp">
                         <View
                             android:id="@+id/divider2"
                             android:layout_width="match_parent"
@@ -160,6 +172,7 @@
                             android:layout_gravity="center"
                             android:background="@color/colorPrimary" />
                         <TextView
+                            android:id="@+id/txtResetPassword"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
@@ -173,7 +186,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_marginBottom="10sp">
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnCreateAccount"
@@ -183,11 +197,10 @@
                             android:layout_marginTop="5sp"
                             android:gravity="center"
                             android:text="@string/create_an_account"
-                            app:cornerRadius="1sp"
+                            app:cornerRadius="5sp"
                             app:icon="@drawable/ic_next"
                             app:iconGravity="end"
                             ></com.google.android.material.button.MaterialButton>
-
 
                     </LinearLayout>
 
@@ -196,10 +209,7 @@
                         android:layout_height="match_parent"
                         android:gravity="right"
                         android:orientation="horizontal"/>
-
                 </LinearLayout>
-
-
 
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
@@ -207,16 +217,15 @@
         <LinearLayout
             android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/theme_signin_bottom"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
             app:layout_constraintVertical_bias="1.0" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

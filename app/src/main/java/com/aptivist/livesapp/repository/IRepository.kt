@@ -8,5 +8,6 @@ import com.google.firebase.auth.AuthCredential
 interface IRepository {
     fun createUserIfNotExists(authenticatedUser: UserData): MutableLiveData<UserData>?
     fun firebaseSignIn(authCredential: AuthCredential?): MutableLiveData<UserData>?
-
+    fun logout():MutableLiveData<Boolean>?
+    fun resertPass(email:String):MutableLiveData<Boolean>?
 }

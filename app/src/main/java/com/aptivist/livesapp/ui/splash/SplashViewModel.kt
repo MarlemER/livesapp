@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import com.aptivist.livesapp.di.interfaces.IFirebaseInstance
 import com.aptivist.livesapp.model.UserData
 import com.aptivist.livesapp.viewmodel.BaseViewModel
+import com.google.firebase.auth.AuthCredential
 import org.koin.java.KoinJavaComponent.inject
 
 
@@ -20,5 +21,9 @@ class SplashViewModel : BaseViewModel() {
 
     fun setUid(uid: String?) {
         userLiveData = splashRepository?.addUserToLiveData(uid)
+    }
+
+    fun validationUser(googleAuthCredential: AuthCredential?) {
+        isUserAuthenticatedLiveData = splashRepository?.firebaseSignIn(googleAuthCredential)
     }
 }

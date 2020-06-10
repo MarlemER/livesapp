@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.aptivist.livesapp.MainActivity
+import com.aptivist.livesapp.ui.main.MainActivity
 import com.aptivist.livesapp.R
 import com.aptivist.livesapp.databinding.ActivitySigninBinding
 import com.aptivist.livesapp.di.interfaces.ISessionSignin
@@ -88,6 +88,7 @@ class SigninActivity : AppCompatActivity() {
     private fun handleFacebookAccessToken(accessToken: AccessToken?) {
         //Get credentials in base the token
         val credential = FacebookAuthProvider.getCredential(accessToken!!.token)
+        Log.d("ACCES TOKEN",accessToken.token)
         signinViewModel.signInWithGoogle(credential)
         signinViewModel.authenticatedUserLiveData?.observe(this, Observer { authenticatedUser ->
             if (!authenticatedUser.isCreated!!) {

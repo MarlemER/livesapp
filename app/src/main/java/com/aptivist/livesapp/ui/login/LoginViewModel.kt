@@ -7,32 +7,24 @@ import com.aptivist.livesapp.model.UserData
 import com.aptivist.livesapp.repository.FirebaseRepository
 import com.aptivist.livesapp.viewmodel.BaseViewModel
 import com.google.firebase.auth.AuthCredential
-import com.google.firebase.database.DatabaseReference
 
 
 class LoginViewModel : BaseViewModel() {
-    var emailLogin:MutableLiveData<String> = MutableLiveData()
-    var passLogin:MutableLiveData<String> = MutableLiveData()
     var plataformType:MutableLiveData<String> = MutableLiveData()
-
     var fireBaseCredencial: IFirebaseInstance? = null
+    var isResetPass:MutableLiveData<Boolean>?=null
+
     private var authRepository = FirebaseRepository(fireBaseCredencial)
 
     var authenticatedUserLiveData: LiveData<UserData>? = null
-    var createdUserLiveData: LiveData<UserData>? = null
 
-    fun validationUser() {
-
-     val user =  fireBaseCredencial?.getFirebaseAuth()?.currentUser
-
-        this.emailLogin.value = authenticatedUserLiveData?.value?.emailUser
-        this.passLogin.value = authenticatedUserLiveData?.value?.passwordUser
-    }
-
-    fun signInWithGoogle(googleAuthCredential: AuthCredential?) {
+    fun validationUser(googleAuthCredential: AuthCredential?) {
         authenticatedUserLiveData = authRepository?.firebaseSignIn(googleAuthCredential)
     }
 
-
+    fun resetPass(email:String)
+    {
+        isResetPass = authRepository?.resertPass(email)
+    }
 
 }

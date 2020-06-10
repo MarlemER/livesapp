@@ -80,7 +80,6 @@
                     android:background="@color/colorButtonRed"
                     android:fontFamily="@font/aclonica"
                     android:text="@string/start"
-                    android:onClick="@{() -> startVM.checkIfUserIsAuthenticated()}"
                     android:textSize="25sp" />
 
             </TableRow>

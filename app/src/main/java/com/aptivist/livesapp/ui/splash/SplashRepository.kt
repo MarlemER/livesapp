@@ -7,6 +7,8 @@ import com.aptivist.livesapp.helpers.Constants.Companion.PHOTO_USER_DEFAULT
 import com.aptivist.livesapp.helpers.Constants.Companion.USERS
 import com.aptivist.livesapp.model.UserData
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
@@ -81,4 +83,37 @@ class SplashRepository(private val firebaseAccess:IFirebaseInstance?) {
             }
         return userMutableLiveData
     }
+
+    fun firebaseSignIn(authCredential: AuthCredential?): MutableLiveData<UserData>? {
+        val authenticatedUserMutableLiveData: MutableLiveData<UserData> = MutableLiveData<UserData>()
+
+        firebaseAuth.signInWithCredential(authCredential!!)
+            ?.addOnCompleteListener { authTask: Task<AuthResult> ->
+                if (authTask.isSuccessful) {
+                    val isNewUser =
+                        authTask.result?.additionalUserInfo?.isNewUser
+                    val firebaseUser = firebaseAuth.currentUser
+                    if (firebaseUser != null) {
+                        val uid = firebaseUser.uid
+                        val name = firebaseUser.displayName
+                        val email = firebaseUser.email
+                        val photo = firebaseUser.photoUrl
+                        val user = UserData(uid,
+                            name,email,"",
+                            isAuthenticated = true,
+                            isNew = false,
+                            isCreated = true,
+                            photoUser = "$photo?type=large"
+                        )
+                        user.isNew = isNewUser
+
+                        authenticatedUserMutableLiveData.value = user
+                    }
+                } else {
+                    Log.d("*****",authTask.exception?.message)
+                }
+            }
+        return authenticatedUserMutableLiveData
+    }
+
 }

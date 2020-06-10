@@ -1,12 +1,14 @@
 package com.aptivist.livesapp.repository
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.aptivist.livesapp.MainApplication
 import com.aptivist.livesapp.di.interfaces.IFirebaseInstance
 import com.aptivist.livesapp.helpers.Constants.Companion.PHOTO_USER_DEFAULT
 import com.aptivist.livesapp.helpers.Constants.Companion.USERS
 import com.aptivist.livesapp.model.UserData
+import com.facebook.login.LoginManager
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.AuthResult
@@ -56,6 +58,24 @@ class FirebaseRepository(private val firebaseAccess:IFirebaseInstance?) : IRepos
         return authenticatedUserMutableLiveData
     }
 
+    override fun logout():MutableLiveData<Boolean>? {
+        val issucces: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+        LoginManager.getInstance().logOut()
+        firebaseAuth.signOut()
+        issucces.value = true
+        return issucces
+    }
+
+    override fun resertPass(email: String): MutableLiveData<Boolean>? {
+        val issucces: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+        firebaseAuth.sendPasswordResetEmail(email)
+            .addOnCompleteListener { task->
+               issucces.value = task.isSuccessful
+            }
+        return issucces
+    }
+
+
     override fun createUserIfNotExists(authenticatedUser: UserData): MutableLiveData<UserData>? {
         val newUserMutableLiveData: MutableLiveData<UserData> = MutableLiveData<UserData>()
         firebaseAuth.createUserWithEmailAndPassword(authenticatedUser.emailUser.toString(), authenticatedUser.userUser.toString())
@@ -75,6 +95,7 @@ class FirebaseRepository(private val firebaseAccess:IFirebaseInstance?) : IRepos
 
         return newUserMutableLiveData
     }
+
 /*
     override fun createUserInFirestoreIfNotExists(authenticatedUser: UserData): MutableLiveData<UserData>? {
         val newUserMutableLiveData: MutableLiveData<UserData> = MutableLiveData<UserData>()
