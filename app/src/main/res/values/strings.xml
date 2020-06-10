@@ -38,7 +38,7 @@
     <string name="fb_login_protocol_scheme">fb719560682122675</string>
     <string name="menu_logout">Logout</string>
     <string name="login">Login</string>
-    <string name="i_forgot_my_password">I forgot my password?</string>
+    <string name="reset_the_password">Reset my password</string>
     <string name="create_an_account">Create an account</string>
 
 </resources>
