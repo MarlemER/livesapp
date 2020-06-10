@@ -75,6 +75,11 @@ class FirebaseRepository(private val firebaseAccess:IFirebaseInstance?) : IRepos
         return issucces
     }
 
+    override fun tokenFacebook(): MutableLiveData<String> {
+        val string:MutableLiveData<String> = MutableLiveData<String>()
+        return string
+    }
+
 
     override fun createUserIfNotExists(authenticatedUser: UserData): MutableLiveData<UserData>? {
         val newUserMutableLiveData: MutableLiveData<UserData> = MutableLiveData<UserData>()

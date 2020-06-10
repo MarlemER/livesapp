@@ -22,4 +22,8 @@ class LocalRepository : IRepository {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun tokenFacebook(): MutableLiveData<String> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 }

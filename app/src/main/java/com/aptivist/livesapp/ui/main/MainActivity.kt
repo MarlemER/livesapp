@@ -18,7 +18,6 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.aptivist.livesapp.R
-import com.aptivist.livesapp.databinding.ActivitySigninBinding
 import com.aptivist.livesapp.di.interfaces.IFirebaseInstance
 import com.aptivist.livesapp.helpers.Constants
 import com.aptivist.livesapp.helpers.Constants.Companion.PHOTO_USER_DEFAULT

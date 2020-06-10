@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.aptivist.livesapp.R
 import com.aptivist.livesapp.helpers.Constants
 import com.aptivist.livesapp.model.UserData
-import com.aptivist.livesapp.ui.signin.LoginActivity
+import com.aptivist.livesapp.ui.login.LoginActivity
 import com.aptivist.livesapp.ui.signin.SigninActivity
 import com.aptivist.livesapp.ui.splash.SplashViewModel
 import kotlinx.android.synthetic.main.activity_start.*
@@ -24,7 +24,8 @@ class StartActivity : AppCompatActivity() {
         setContentView(R.layout.activity_start)
 
        //checkIfUserIsAuthenticated()
-        btnStart.setOnClickListener {  goToLoginActivity() }
+        btnLogin.setOnClickListener {  goToLoginActivity() }
+        btnSignin.setOnClickListener { goToSignInActivity() }
     }
 
 /*
@@ -38,6 +39,10 @@ class StartActivity : AppCompatActivity() {
 
     private fun goToLoginActivity() {
         val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+    }
+    private fun goToSignInActivity() {
+        val intent = Intent(this, SigninActivity::class.java)
         startActivity(intent)
     }
 }

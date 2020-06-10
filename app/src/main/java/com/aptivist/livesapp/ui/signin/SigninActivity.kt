@@ -12,7 +12,9 @@ import androidx.lifecycle.ViewModelProviders
 import com.aptivist.livesapp.ui.main.MainActivity
 import com.aptivist.livesapp.R
 import com.aptivist.livesapp.databinding.ActivitySigninBinding
+import com.aptivist.livesapp.di.implementation.SharePreferencesImpl
 import com.aptivist.livesapp.di.interfaces.ISessionSignin
+import com.aptivist.livesapp.helpers.Constants.Companion.SHAREPREF_TOKEN_FACEBOOK
 import com.aptivist.livesapp.helpers.Constants.Companion.USER
 import com.aptivist.livesapp.model.UserData
 import com.facebook.*
@@ -27,6 +29,7 @@ class SigninActivity : AppCompatActivity() {
     lateinit var callbackManager: CallbackManager
     lateinit var signinViewModel: SigninViewModel
     lateinit var dataBinding: ActivitySigninBinding
+    private lateinit var pHelper:SharePreferencesImpl
 
     private val validationUser: ISessionSignin by inject()
 
@@ -40,6 +43,8 @@ class SigninActivity : AppCompatActivity() {
             DataBindingUtil.setContentView<ActivitySigninBinding>(this, R.layout.activity_signin)
         dataBinding.lifecycleOwner = this
         dataBinding.viewModelSignin = signinViewModel
+
+        pHelper = SharePreferencesImpl.newInstance(applicationContext)!!
 
         //printKeyHash()
         //Instance Firebase
@@ -88,7 +93,14 @@ class SigninActivity : AppCompatActivity() {
     private fun handleFacebookAccessToken(accessToken: AccessToken?) {
         //Get credentials in base the token
         val credential = FacebookAuthProvider.getCredential(accessToken!!.token)
-        Log.d("ACCES TOKEN",accessToken.token)
+
+        //if(pHelperToken == null) {
+        pHelper.setTokenFacebook(SHAREPREF_TOKEN_FACEBOOK, accessToken.token.toString())
+       // }
+        val pHelperToken = pHelper.getTokenFacebook(SHAREPREF_TOKEN_FACEBOOK)
+
+        Log.d("ACCES TOKEN",pHelperToken)
+
         signinViewModel.signInWithGoogle(credential)
         signinViewModel.authenticatedUserLiveData?.observe(this, Observer { authenticatedUser ->
             if (!authenticatedUser.isCreated!!) {

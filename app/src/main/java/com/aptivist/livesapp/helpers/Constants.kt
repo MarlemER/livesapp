@@ -7,6 +7,7 @@ class Constants {
         var USER = "user"
         var USERS = "users"
         var PHOTO_USER_DEFAULT = "https://img.pngio.com/user-account-management-logo-user-icon-png-600x600-png-user-logo-png-820_641.png"
-
+        val SHARE_PREFERENCES_MAIN:String="mySharedPreferences"
+        val SHAREPREF_TOKEN_FACEBOOK:String="keyFacebook"
     }
 }

@@ -10,4 +10,5 @@ interface IRepository {
     fun firebaseSignIn(authCredential: AuthCredential?): MutableLiveData<UserData>?
     fun logout():MutableLiveData<Boolean>?
     fun resertPass(email:String):MutableLiveData<Boolean>?
+    fun tokenFacebook():MutableLiveData<String>
 }

@@ -1,4 +1,4 @@
-package com.aptivist.livesapp.ui.signin
+package com.aptivist.livesapp.ui.login
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,10 +12,13 @@ import androidx.lifecycle.ViewModelProviders
 import com.aptivist.livesapp.ui.main.MainActivity
 import com.aptivist.livesapp.R
 import com.aptivist.livesapp.databinding.ActivityLoginBinding
+import com.aptivist.livesapp.di.implementation.SharePreferencesImpl
 import com.aptivist.livesapp.di.interfaces.IFirebaseInstance
 import com.aptivist.livesapp.di.interfaces.ISessionSignin
+import com.aptivist.livesapp.helpers.Constants
 import com.aptivist.livesapp.helpers.Constants.Companion.USER
 import com.aptivist.livesapp.model.UserData
+import com.aptivist.livesapp.ui.signin.LoginViewModel
 import com.facebook.*
 import com.facebook.login.LoginResult
 import com.google.firebase.auth.FacebookAuthProvider
@@ -34,10 +37,13 @@ class LoginActivity : AppCompatActivity() {
     private var auth = validationFirebase.getFirebaseAuth()
     lateinit var loginViewModel: LoginViewModel
     lateinit var dataBinding: ActivityLoginBinding
+    private lateinit var pHelper: SharePreferencesImpl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_login)
+
+        pHelper = SharePreferencesImpl.newInstance(applicationContext)!!
 
         //intancia del vm
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
@@ -133,6 +139,13 @@ class LoginActivity : AppCompatActivity() {
 
     private fun handleFacebookAccessToken(token: AccessToken) {
         val credential = FacebookAuthProvider.getCredential(token.token)
+        //if(pHelperToken == null) {
+        pHelper.setTokenFacebook(Constants.SHAREPREF_TOKEN_FACEBOOK, token.token.toString())
+        // }
+        val pHelperToken = pHelper.getTokenFacebook(Constants.SHAREPREF_TOKEN_FACEBOOK)
+
+        Log.d("ACCES TOKEN",pHelperToken)
+
         Log.d("ACCES TOKEN",token.token)
         loginViewModel.validationUser(credential)
         loginViewModel.authenticatedUserLiveData?.observe(this, androidx.lifecycle.Observer { authenticatedUser->
