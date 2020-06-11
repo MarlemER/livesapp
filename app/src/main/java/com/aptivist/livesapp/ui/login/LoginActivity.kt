@@ -156,16 +156,6 @@ class LoginActivity : AppCompatActivity() {
         })
     }
 
-    private fun getTokenFacebook()
-    {
-        val token = AccessToken.getCurrentAccessToken()
-        if(token == null){
-            Toast.makeText(this,"Invalid",Toast.LENGTH_LONG).show()
-        }else{
-            Toast.makeText(this,"Successful",Toast.LENGTH_LONG).show()
-        }
-    }
-
     private fun goToMainActivity(user: UserData) {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra(USER, user)
