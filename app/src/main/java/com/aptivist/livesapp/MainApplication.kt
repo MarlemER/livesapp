@@ -2,8 +2,11 @@ package com.aptivist.livesapp
 
 import android.app.Application
 import com.aptivist.livesapp.di.implementation.FirebaseImpl
+import com.aptivist.livesapp.di.implementation.MessagesDialogsImpl
+import com.aptivist.livesapp.di.implementation.SharePreferencesImpl
 import com.aptivist.livesapp.di.implementation.UserSessionImpl
 import com.aptivist.livesapp.di.interfaces.IFirebaseInstance
+import com.aptivist.livesapp.di.interfaces.IMessagesDialogs
 import com.aptivist.livesapp.di.interfaces.ISessionSignin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -30,6 +33,7 @@ class MainApplication:Application() {
        // factory<ISessionUser> { UserSessionImpl(get()) }
         factory<IFirebaseInstance> { FirebaseImpl() }
         factory<ISessionSignin> { UserSessionImpl() }
+        factory<IMessagesDialogs> { MessagesDialogsImpl() }
     }
 
     private val viewModelModule = module {

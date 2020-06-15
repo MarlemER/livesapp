@@ -73,23 +73,13 @@
                     android:orientation="vertical" />
 
                 <Button
-                    android:id="@+id/btnLogin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@color/colorButtonYellow"
-                    android:fontFamily="@font/aclonica"
-                    android:text="@string/login"
-                    android:textSize="25sp" />
-
-                <Button
-                    android:id="@+id/btnSignin"
+                    android:id="@+id/btnStart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@color/colorButtonRed"
                     android:fontFamily="@font/aclonica"
-                    android:text="@string/sign_in"
+                    android:text="@string/start"
                     android:textSize="25sp" />
 
             </TableRow>

@@ -1,6 +1,7 @@
 package com.aptivist.livesapp.ui.main
 
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -8,27 +9,36 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.aptivist.livesapp.R
+import com.aptivist.livesapp.di.implementation.SharePreferencesImpl
 import com.aptivist.livesapp.di.interfaces.IFirebaseInstance
+import com.aptivist.livesapp.di.interfaces.IMessagesDialogs
 import com.aptivist.livesapp.helpers.Constants
 import com.aptivist.livesapp.helpers.Constants.Companion.PHOTO_USER_DEFAULT
+import com.aptivist.livesapp.helpers.Constants.Companion.SHAREPREF_TOKEN_FACEBOOK
 import com.aptivist.livesapp.model.UserData
 import com.aptivist.livesapp.ui.signin.SigninViewModel
 import com.aptivist.livesapp.ui.splash.SplashActivity
+import com.aptivist.livesapp.ui.start.StartActivity
 import com.facebook.login.LoginManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.internal.NavigationMenuItemView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 
 
@@ -38,10 +48,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var navView:NavigationView
     private lateinit var view:View
     lateinit var mainViewModel: MainViewModel
+    private lateinit var pHelper: SharePreferencesImpl
+    private val messagesUser: IMessagesDialogs by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        pHelper = SharePreferencesImpl.newInstance(applicationContext)!!
 
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
@@ -95,18 +109,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         EmailProfile.text = user.emailUser?:"livesapp@support.com"
         var PhotoProfile:ImageView = view.findViewById(R.id.imgProfileUser)
         Picasso.get().load( (user.photoUser)?:PHOTO_USER_DEFAULT).resize(250,250).centerCrop().into(PhotoProfile)
-        Toast.makeText(this,"Login successful",Toast.LENGTH_LONG).show()
+        messagesUser.showToast(this,"Login successful")
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+    override fun onNavigationItemSelected(@NonNull item: MenuItem):Boolean {
         when(item.itemId)
         {
-            R.id.nav_logout -> item.setOnMenuItemClickListener {
-                logout()
-                true
-            }
+            R.id.nav_logout -> logout()
         }
-        return super.onOptionsItemSelected(item)
+        drawer_layout.closeDrawer(GravityCompat.START)
+        //return super.onOptionsItemSelected(item)
+        return true
     }
 
     private fun logout()
@@ -114,9 +127,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         /*firebaseCredential.getFirebaseAuth().signOut()
         LoginManager.getInstance().logOut()*/
         mainViewModel.logout()
+        //var result = pHelper.clearTokenFacebook(SHAREPREF_TOKEN_FACEBOOK)
 
-        startActivity(Intent(this,SplashActivity::class.java))
-        Toast.makeText(this, "Logout success", Toast.LENGTH_SHORT).show()
+        var intent = Intent(this,StartActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        messagesUser.showToast(this,"Logout success")
+        //Toast.makeText(this, "Logout success", Toast.LENGTH_SHORT).show()
         finish()
     }
 

@@ -24,8 +24,8 @@ class StartActivity : AppCompatActivity() {
         setContentView(R.layout.activity_start)
 
        //checkIfUserIsAuthenticated()
-        btnLogin.setOnClickListener {  goToLoginActivity() }
-        btnSignin.setOnClickListener { goToSignInActivity() }
+        btnStart.setOnClickListener {  goToLoginActivity() }
+       // btnSignin.setOnClickListener { goToSignInActivity() }
     }
 
 /*

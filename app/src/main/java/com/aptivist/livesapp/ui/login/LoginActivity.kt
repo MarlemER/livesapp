@@ -14,11 +14,13 @@ import com.aptivist.livesapp.R
 import com.aptivist.livesapp.databinding.ActivityLoginBinding
 import com.aptivist.livesapp.di.implementation.SharePreferencesImpl
 import com.aptivist.livesapp.di.interfaces.IFirebaseInstance
+import com.aptivist.livesapp.di.interfaces.IMessagesDialogs
 import com.aptivist.livesapp.di.interfaces.ISessionSignin
 import com.aptivist.livesapp.helpers.Constants
 import com.aptivist.livesapp.helpers.Constants.Companion.USER
 import com.aptivist.livesapp.model.UserData
 import com.aptivist.livesapp.ui.signin.LoginViewModel
+import com.aptivist.livesapp.ui.signin.SigninActivity
 import com.facebook.*
 import com.facebook.login.LoginResult
 import com.google.firebase.auth.FacebookAuthProvider
@@ -32,6 +34,7 @@ class LoginActivity : AppCompatActivity() {
 
     private val validationFirebase: IFirebaseInstance by inject()
     private val validationUser: ISessionSignin by inject()
+    private val messagesUser: IMessagesDialogs by inject()
     //private lateinit var auth: FirebaseAuth
     var callbackManager = CallbackManager.Factory.create()
     private var auth = validationFirebase.getFirebaseAuth()
@@ -56,15 +59,18 @@ class LoginActivity : AppCompatActivity() {
         btnLogin.setOnClickListener { signInEmailPass(edtSigninEmail.text.toString(),edtSigninPassword.text.toString()) }
         btnLoginFacebookLogin.setOnClickListener { loginFacebook() }
         txtResetPassword.setOnClickListener { resetPass() }
+        btnCreateAccount.setOnClickListener { goSignin() }
     }
 
     private fun observer(){
         loginViewModel.isResetPass?.observe(this, Observer {
             if(it)
             {
-                Toast.makeText(this@LoginActivity,"Email send, check your Email for change the password",Toast.LENGTH_LONG).show()
+                messagesUser.showToast(this,"Email send, check your Email for change the password")
+                //Toast.makeText(this@LoginActivity,"Email send, check your Email for change the password",Toast.LENGTH_LONG).show()
             }else{
-                Toast.makeText(this@LoginActivity,"Invalid email isn't registered, try again!",Toast.LENGTH_LONG).show()
+                messagesUser.showToast(this,"Invalid email isn't registered, try again!")
+                //Toast.makeText(this@LoginActivity,"Invalid email isn't registered, try again!",Toast.LENGTH_LONG).show()
             }
         })
     }
@@ -78,13 +84,21 @@ class LoginActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
-                        Toast.makeText(this,"Login successful",Toast.LENGTH_LONG).show()
-                        startActivity(Intent(this,
-                            MainActivity::class.java))
+                        messagesUser.showToast(this,"Login successful")
+                        //Toast.makeText(this,"Login successful",Toast.LENGTH_LONG).show()
+                        var userData = UserData("", passUser, emailUser, passUser, true, false, true, Constants.PHOTO_USER_DEFAULT)
+                       /* user?.isCreated = true
+                        user?.photoUser = Constants.PHOTO_USER_DEFAULT
+                        user?.emailUser = edtSigninEmail.text.toString()
+                        user?.passwordUser = edtSigninPassword.text.toString()*/
+                        var intent = Intent(this,MainActivity::class.java)
+                        intent.putExtra(USER, userData)
+                        startActivity(intent)
                         finish()
                     } else {
                         // If sign in fails, display a message to the user.
-                        Toast.makeText(this,"Enter a valid account",Toast.LENGTH_LONG).show()
+                        messagesUser.showToast(this,"Enter a valid account")
+                        //Toast.makeText(this,"Enter a valid account",Toast.LENGTH_LONG).show()
                     }
                 }
         }
@@ -120,11 +134,13 @@ class LoginActivity : AppCompatActivity() {
                 }
 
                 override fun onCancel() {
-                    Toast.makeText(this@LoginActivity,"Login successful:onCancel",Toast.LENGTH_LONG).show()
+                    messagesUser.showToast(this@LoginActivity,"Login successful:onCancel")
+                    //Toast.makeText(this@LoginActivity,"Login successful:onCancel",Toast.LENGTH_LONG).show()
                 }
 
                 override fun onError(error: FacebookException) {
-                    Toast.makeText(this@LoginActivity,"Login successful:onError",Toast.LENGTH_LONG).show()
+                    messagesUser.showToast(this@LoginActivity,"Login successful:onError")
+                    //Toast.makeText(this@LoginActivity,"Login successful:onError",Toast.LENGTH_LONG).show()
                 }
             })
     }
@@ -168,9 +184,12 @@ class LoginActivity : AppCompatActivity() {
         if(validationUser.getEmailUser(edtSigninEmail.text.toString()))
             {
                loginViewModel.resetPass(edtSigninEmail.text.toString())
+                messagesUser.showToast(this,"Password is send")
+                //Toast.makeText(this@LoginActivity,"Password is send",Toast.LENGTH_LONG).show()
 
             }else{
-            Toast.makeText(this@LoginActivity,"Introduce a valid email for continue",Toast.LENGTH_LONG).show()
+            messagesUser.showToast(this,"Introduce a valid email for continue")
+            //Toast.makeText(this@LoginActivity,"Introduce a valid email for continue",Toast.LENGTH_LONG).show()
             edtSigninEmail.error = "Enter an E-Mail Address"
         }
 
@@ -180,6 +199,11 @@ class LoginActivity : AppCompatActivity() {
     {
         edtSigninEmail.error = null
         edtSigninPassword.error = null
+    }
+
+    private fun goSignin(){
+        startActivity(Intent(this,SigninActivity::class.java))
+        finish()
     }
 
 }

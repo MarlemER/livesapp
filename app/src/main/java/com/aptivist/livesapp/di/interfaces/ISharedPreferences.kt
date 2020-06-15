@@ -8,4 +8,6 @@ interface ISharedPreferences {
     fun setTokenFacebook(key:String,value: String?)
     //load
     fun getTokenFacebook(key: String):String?
+    //clear
+    fun clearTokenFacebook(vararg keys:String)
 }
