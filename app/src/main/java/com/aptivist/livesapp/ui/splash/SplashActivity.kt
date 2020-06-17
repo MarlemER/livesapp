@@ -61,7 +61,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun checkIfUserIsAuthenticated() {
         //splashViewModel?.checkIfUserIsAuthenticated()
-        val pHelperToken = pHelper.getTokenFacebook(Constants.SHAREPREF_TOKEN_FACEBOOK)?:""
+        val pHelperToken = pHelper.getDataFirebase(Constants.SHAREPREF_TOKEN_FACEBOOK)?:""
         //Log.d("ACCES TOKEN",token.token)
         if(!pHelperToken.isNullOrEmpty())
         {

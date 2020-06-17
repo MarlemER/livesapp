@@ -3,6 +3,7 @@ package com.aptivist.livesapp.di.implementation
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.view.ContextThemeWrapper
 import android.widget.Toast
 import com.aptivist.livesapp.R
 import com.aptivist.livesapp.di.interfaces.IMessagesDialogs
@@ -24,16 +25,33 @@ class MessagesDialogsImpl:IMessagesDialogs {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun showMessage(title: String,message: String,setTitlePositiveButton: String,setTitleNegativeButton: String,icon: Drawable, context: Context) {
+    override fun showMessageOneOption(title: String,message: String?,setTitlePositiveButton: String,icon: Int,context: Context) {
+        AlertDialog.Builder(ContextThemeWrapper(context,R.style.AlertDialogCustom))
+            .setTitle(title)
+            .setMessage(message)
+            .setIcon(icon)
+            .setPositiveButton(setTitlePositiveButton){_,_->
+                if (message != null) {
+                    showToast(context,message)
+                }
+            }
+            .create().show()
+    }
+
+    override fun showMessageTwoOption(title: String,message: String?,setTitlePositiveButton: String,setTitleNegativeButton: String,icon: Int, context: Context) {
         AlertDialog.Builder(context)
             .setTitle(title)
             .setMessage(message)
             .setIcon(icon)
             .setPositiveButton(setTitlePositiveButton){_,_->
-                showToast(context,message)
+                if (message != null) {
+                    showToast(context,message)
+                }
             }
             .setNegativeButton(setTitleNegativeButton){_,_->
-                showToast(context,message)
+                if (message != null) {
+                    showToast(context,message)
+                }
             }
             .create().show()
     }

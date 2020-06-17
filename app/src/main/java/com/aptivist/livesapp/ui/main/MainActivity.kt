@@ -27,6 +27,8 @@ import com.aptivist.livesapp.di.interfaces.IFirebaseInstance
 import com.aptivist.livesapp.di.interfaces.IMessagesDialogs
 import com.aptivist.livesapp.helpers.Constants
 import com.aptivist.livesapp.helpers.Constants.Companion.PHOTO_USER_DEFAULT
+import com.aptivist.livesapp.helpers.Constants.Companion.SHAREPREF_EMAILUSER_FIREBASE
+import com.aptivist.livesapp.helpers.Constants.Companion.SHAREPREF_PASSUSER_FIREBASE
 import com.aptivist.livesapp.helpers.Constants.Companion.SHAREPREF_TOKEN_FACEBOOK
 import com.aptivist.livesapp.model.UserData
 import com.aptivist.livesapp.ui.signin.SigninViewModel
@@ -128,6 +130,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         LoginManager.getInstance().logOut()*/
         mainViewModel.logout()
         //var result = pHelper.clearTokenFacebook(SHAREPREF_TOKEN_FACEBOOK)
+        pHelper.clearDataFirebase(SHAREPREF_TOKEN_FACEBOOK)
+        pHelper.clearDataFirebase(SHAREPREF_EMAILUSER_FIREBASE)
+        pHelper.clearDataFirebase(SHAREPREF_PASSUSER_FIREBASE)
 
         var intent = Intent(this,StartActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

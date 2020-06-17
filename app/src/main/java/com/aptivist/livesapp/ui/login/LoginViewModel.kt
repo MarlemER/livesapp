@@ -22,9 +22,10 @@ class LoginViewModel : BaseViewModel() {
         authenticatedUserLiveData = authRepository?.firebaseSignIn(googleAuthCredential)
     }
 
-    fun resetPass(email:String)
+    fun resetPass(email:String):Boolean?
     {
         isResetPass = authRepository?.resertPass(email)
+        return  isResetPass?.value
     }
 
 }

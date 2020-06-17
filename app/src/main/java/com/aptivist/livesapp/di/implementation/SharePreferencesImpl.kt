@@ -11,23 +11,14 @@ class SharePreferencesImpl:ISharedPreferences {
     private lateinit var appPref: SharedPreferences
     private lateinit var spEditor: SharedPreferences.Editor
 
-
-    override fun setTokenFacebook(key: String, value: String?) {
+    override fun setDataFirebase(key: String, value: String?) {
             spEditor=appPref.edit()
             spEditor.putString(key,value)
             spEditor.apply()
     }
 
-    override fun getTokenFacebook(key: String): String? = appPref.getString(key,null)
-    override fun clearTokenFacebook(vararg keys: String) {
-        for(key in keys){
-                var prefHelp=SharePreferencesImpl()
-                prefHelp.clearTokenFacebook(key)
-                break
-            }
-            clearData()
-    }
-
+    override fun getDataFirebase(key: String): String? = appPref.getString(key,null)
+    override fun clearDataFirebase(key: String) = setDataFirebase(key,null)
     //singleton
     companion object{
         fun newInstance(context: Context):SharePreferencesImpl?
@@ -40,7 +31,7 @@ class SharePreferencesImpl:ISharedPreferences {
 
     private fun clearData(){
         var prefHelp=SharePreferencesImpl()
-        prefHelp.getTokenFacebook(SHAREPREF_TOKEN_FACEBOOK)?:""
+        prefHelp.getDataFirebase(SHAREPREF_TOKEN_FACEBOOK)?:""
     }
 
 }

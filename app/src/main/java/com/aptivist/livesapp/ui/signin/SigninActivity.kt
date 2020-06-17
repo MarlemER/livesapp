@@ -13,7 +13,10 @@ import com.aptivist.livesapp.ui.main.MainActivity
 import com.aptivist.livesapp.R
 import com.aptivist.livesapp.databinding.ActivitySigninBinding
 import com.aptivist.livesapp.di.implementation.SharePreferencesImpl
+import com.aptivist.livesapp.di.interfaces.IMessagesDialogs
 import com.aptivist.livesapp.di.interfaces.ISessionSignin
+import com.aptivist.livesapp.helpers.Constants.Companion.SHAREPREF_EMAILUSER_FIREBASE
+import com.aptivist.livesapp.helpers.Constants.Companion.SHAREPREF_PASSUSER_FIREBASE
 import com.aptivist.livesapp.helpers.Constants.Companion.SHAREPREF_TOKEN_FACEBOOK
 import com.aptivist.livesapp.helpers.Constants.Companion.USER
 import com.aptivist.livesapp.model.UserData
@@ -32,6 +35,7 @@ class SigninActivity : AppCompatActivity() {
     private lateinit var pHelper:SharePreferencesImpl
 
     private val validationUser: ISessionSignin by inject()
+    private val messageUser:IMessagesDialogs by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,10 +85,10 @@ class SigninActivity : AppCompatActivity() {
         signinViewModel.createUser(authenticatedUser)
         signinViewModel.createdUserLiveData?.observe(this, Observer { user ->
             if (user.isCreated!!) {
-                Toast.makeText(this, "User register successful", Toast.LENGTH_SHORT).show()
+                messageUser.showToast(this,"User register successful")
                 goToMainActivity(user)
             } else {
-                Toast.makeText(this, "Error try again", Toast.LENGTH_SHORT).show()
+                messageUser.showMessageOneOption("Error",user.messageResult?:"Try again","ok",R.drawable.ic_error,this)
             }
         })
     }
@@ -95,11 +99,9 @@ class SigninActivity : AppCompatActivity() {
         val credential = FacebookAuthProvider.getCredential(accessToken!!.token)
 
         //if(pHelperToken == null) {
-        pHelper.setTokenFacebook(SHAREPREF_TOKEN_FACEBOOK, accessToken.token.toString())
+        pHelper.setDataFirebase(SHAREPREF_TOKEN_FACEBOOK, accessToken.token.toString())
        // }
-        val pHelperToken = pHelper.getTokenFacebook(SHAREPREF_TOKEN_FACEBOOK)
-
-        Log.d("ACCES TOKEN",pHelperToken)
+        val pHelperToken = pHelper.getDataFirebase(SHAREPREF_TOKEN_FACEBOOK)
 
         signinViewModel.signInWithGoogle(credential)
         signinViewModel.authenticatedUserLiveData?.observe(this, Observer { authenticatedUser ->
@@ -116,8 +118,11 @@ class SigninActivity : AppCompatActivity() {
         //validate if user exist
         if (validationUser.getEmailUser(emailUser) && validationUser.getPassUser(passUser))
         {
-            var userData = UserData("", passUser, emailUser, passUser, false, false, false, "")
+            var userData = UserData("", "livesappUser", emailUser, passUser, false, false, false, "","")
             createNewUser(userData)
+
+            pHelper.setDataFirebase(SHAREPREF_EMAILUSER_FIREBASE,emailUser)
+            pHelper.setDataFirebase(SHAREPREF_PASSUSER_FIREBASE,passUser)
         }
         else
         {

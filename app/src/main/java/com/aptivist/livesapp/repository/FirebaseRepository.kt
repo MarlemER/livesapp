@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.aptivist.livesapp.MainApplication
 import com.aptivist.livesapp.di.interfaces.IFirebaseInstance
+import com.aptivist.livesapp.di.interfaces.IMessagesDialogs
 import com.aptivist.livesapp.helpers.Constants.Companion.PHOTO_USER_DEFAULT
 import com.aptivist.livesapp.helpers.Constants.Companion.USERS
 import com.aptivist.livesapp.model.UserData
@@ -26,9 +27,11 @@ class FirebaseRepository(private val firebaseAccess:IFirebaseInstance?) : IRepos
 
     //constructor()
 
+
     override fun firebaseSignIn(authCredential: AuthCredential?): MutableLiveData<UserData>? {
         val authenticatedUserMutableLiveData: MutableLiveData<UserData> = MutableLiveData<UserData>()
-
+        val authenticatedUserErrorMutableLiveData: MutableLiveData<String> = MutableLiveData<String>()
+        val user:UserData? = null
         firebaseAuth.signInWithCredential(authCredential!!)
             ?.addOnCompleteListener { authTask: Task<AuthResult> ->
                 if (authTask.isSuccessful) {
@@ -45,7 +48,8 @@ class FirebaseRepository(private val firebaseAccess:IFirebaseInstance?) : IRepos
                             isAuthenticated = true,
                             isNew = false,
                             isCreated = true,
-                            photoUser = "$photo?type=large"
+                            photoUser = "$photo?type=large",
+                            messageResult = ""
                         )
                         user.isNew = isNewUser
 
@@ -53,6 +57,7 @@ class FirebaseRepository(private val firebaseAccess:IFirebaseInstance?) : IRepos
                     }
                 } else {
                     Log.d("*****",authTask.exception?.message)
+                    authenticatedUserMutableLiveData.value = UserData("","","","",false,false,false,"",authTask.exception?.message)
                 }
             }
         return authenticatedUserMutableLiveData
@@ -67,12 +72,17 @@ class FirebaseRepository(private val firebaseAccess:IFirebaseInstance?) : IRepos
     }
 
     override fun resertPass(email: String): MutableLiveData<Boolean>? {
-        val issucces: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+        val isSucces: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
         firebaseAuth.sendPasswordResetEmail(email)
-            .addOnCompleteListener { task->
-               issucces.value = task.isSuccessful
+            .addOnSuccessListener { task->
+                //Log.d("*****","VALIDAOK")
+                isSucces.value = true
             }
-        return issucces
+            .addOnFailureListener{task->
+                //Log.d("*****","VALIDACANCEL"+task.message)
+                isSucces.value = false
+            }
+        return isSucces
     }
 
     override fun tokenFacebook(): MutableLiveData<String> {
@@ -92,12 +102,13 @@ class FirebaseRepository(private val firebaseAccess:IFirebaseInstance?) : IRepos
                     newUserMutableLiveData.setValue(authenticatedUser)
                 }
                 else {
-                    Log.d("*****",uidTask.exception?.message)
+                   // Log.d("*****",uidTask.exception?.message)
+
                     authenticatedUser.isCreated = false
+                    authenticatedUser.messageResult = uidTask.exception?.message
+                    newUserMutableLiveData.setValue(authenticatedUser)
                 }
-
             }
-
         return newUserMutableLiveData
     }
 

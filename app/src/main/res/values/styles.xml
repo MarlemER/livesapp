@@ -49,15 +49,12 @@
     <style name="AppTheme2" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimaryDark">@color/colorButtonRed</item>
     </style>
-
-   <!-- <style name="ThemeAppMaterialDesign" parent="Theme.MaterialComponents">
-        <item name="colorPrimary">@color/colorButtonRed</item>
-    </style>-->
-
-
-   <!-- <style name="ThemeAppMaterialDesign.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>-->
+    <!--Theme for alertDialog-->
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!-- Used for the buttons -->
+        <item name="colorAccent">@color/colorButtonRed</item>
+        <!-- Used for the title and text -->
+        <item name="android:textColorPrimary">#000000</item>
+    </style>
 
 </resources>

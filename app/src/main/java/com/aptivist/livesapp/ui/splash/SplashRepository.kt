@@ -26,7 +26,8 @@ class SplashRepository(private val firebaseAccess:IFirebaseInstance?) {
         isAuthenticated = false,
         isNew = false,
         isCreated = true,
-         photoUser = ""
+         photoUser = "",
+         messageResult = ""
     )
 
    // private val rootRef = FirebaseFirestore.getInstance()
@@ -103,7 +104,8 @@ class SplashRepository(private val firebaseAccess:IFirebaseInstance?) {
                             isAuthenticated = true,
                             isNew = false,
                             isCreated = true,
-                            photoUser = "$photo?type=large"
+                            photoUser = "$photo?type=large",
+                            messageResult = ""
                         )
                         user.isNew = isNewUser
 

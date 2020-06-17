@@ -5,9 +5,9 @@ import android.content.SharedPreferences
 interface ISharedPreferences {
     //set the data for the view
     //save
-    fun setTokenFacebook(key:String,value: String?)
+    fun setDataFirebase(key:String,value: String?)
     //load
-    fun getTokenFacebook(key: String):String?
+    fun getDataFirebase(key: String):String?
     //clear
-    fun clearTokenFacebook(vararg keys:String)
+    fun clearDataFirebase(key:String)
 }
