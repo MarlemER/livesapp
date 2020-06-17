@@ -106,12 +106,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun getDataProfile(user : UserData){
         view = navView.getHeaderView(0)
         var NameProfile:TextView = view.findViewById(R.id.txtNameProfileUser)
-        NameProfile.text = user.userUser?:"livesapp"
+        NameProfile.text = user.userUser?:resources.getString(R.string.livesapp_user)
         var EmailProfile:TextView = view.findViewById(R.id.txtEmailProfileUser)
-        EmailProfile.text = user.emailUser?:"livesapp@support.com"
+        EmailProfile.text = user.emailUser?:resources.getString(R.string.email_livesapp)
         var PhotoProfile:ImageView = view.findViewById(R.id.imgProfileUser)
         Picasso.get().load( (user.photoUser)?:PHOTO_USER_DEFAULT).resize(250,250).centerCrop().into(PhotoProfile)
-        messagesUser.showToast(this,"Login successful")
+        messagesUser.showToast(this,resources.getString(R.string.login_successful))
     }
 
     override fun onNavigationItemSelected(@NonNull item: MenuItem):Boolean {
@@ -129,7 +129,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         /*firebaseCredential.getFirebaseAuth().signOut()
         LoginManager.getInstance().logOut()*/
         mainViewModel.logout()
-        //var result = pHelper.clearTokenFacebook(SHAREPREF_TOKEN_FACEBOOK)
         pHelper.clearDataFirebase(SHAREPREF_TOKEN_FACEBOOK)
         pHelper.clearDataFirebase(SHAREPREF_EMAILUSER_FIREBASE)
         pHelper.clearDataFirebase(SHAREPREF_PASSUSER_FIREBASE)
@@ -137,8 +136,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var intent = Intent(this,StartActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
-        messagesUser.showToast(this,"Logout success")
-        //Toast.makeText(this, "Logout success", Toast.LENGTH_SHORT).show()
+        messagesUser.showToast(this,resources.getString(R.string.logout_successful))
         finish()
     }
 

@@ -28,4 +28,8 @@ class LoginViewModel : BaseViewModel() {
         return  isResetPass?.value
     }
 
+    fun newresetPass(email: String){
+        isResetPass = authRepository?.resertPass(email)
+    }
+
 }
