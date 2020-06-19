@@ -116,7 +116,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun validationFields():Boolean{
         var valid:Boolean = false
-        if (validationUser.getEmailUser(edtSigninEmail.text.toString()) && edtSigninPassword.text.toString().isNullOrEmpty()!!)
+        if (validationUser.getEmailUser(edtSigninEmail.text.toString()) && validationUser.getPassUser(edtSigninPassword.text.toString()))
         {
             valid = true
         }
