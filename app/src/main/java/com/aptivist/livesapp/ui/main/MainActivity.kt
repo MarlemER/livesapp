@@ -1,11 +1,11 @@
 package com.aptivist.livesapp.ui.main
 
+import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.util.AttributeSet
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -14,13 +14,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import androidx.navigation.ui.*
 import com.aptivist.livesapp.R
 import com.aptivist.livesapp.di.implementation.SharePreferencesImpl
 import com.aptivist.livesapp.di.interfaces.IFirebaseInstance
@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var mainViewModel: MainViewModel
     private lateinit var pHelper: SharePreferencesImpl
     private val messagesUser: IMessagesDialogs by inject()
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +76,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         navView = findViewById(R.id.nav_view)
-        val navController = findNavController(R.id.nav_host_fragment)
+        navController = findNavController(R.id.nav_host_fragment)
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -84,12 +85,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_profile,
             R.id.nav_indicators,
             R.id.nav_statistics,
-            R.id.nav_settings
+            R.id.nav_settings,
+            R.id.nav_logout
         ), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        navView.setNavigationItemSelectedListener(this)
+       // navView.setNavigationItemSelectedListener(this)
 
         val user : UserData = intent.extras?.get(Constants.USER) as UserData
         getDataProfile(user)
@@ -118,16 +120,33 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         messagesUser.showToast(this,resources.getString(R.string.login_successful))
     }
 
-    override fun onNavigationItemSelected(@NonNull item: MenuItem):Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId)
         {
             R.id.nav_logout -> logout()
+        }
+        return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
+    }
+
+    override fun onNavigationItemSelected(@NonNull item: MenuItem):Boolean {
+        when(item.itemId)
+        {
+            /*R.id.nav_home -> replaceFragment(HomeFragment())
+            R.id.nav_profile -> {
+                replaceFragment(ProfileFragment())
+            }
+            R.id.nav_indicators->{
+                replaceFragment(IndicatorFragment())
+            }*/
+            R.id.nav_logout -> logout()
             else -> { Toast.makeText(this,"default",Toast.LENGTH_SHORT).show() }
         }
-        drawer_layout.closeDrawer(GravityCompat.START)
+        //drawer_layout.closeDrawer(GravityCompat.START)
+        return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
         //return super.onOptionsItemSelected(item)
-        return true
+        //return true
     }
+
 
     private fun logout()
     {
@@ -142,6 +161,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         startActivity(intent)
         messagesUser.showToast(this,resources.getString(R.string.logout_successful))
         finish()
+    }
+
+    private fun replaceFragment(fragment:Fragment)
+    {
+        val fragmentTransition = supportFragmentManager.beginTransaction()
+        fragmentTransition.replace(R.id.drawer_layout,fragment)
+        fragmentTransition.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        fragmentTransition.commit()
     }
 
 }

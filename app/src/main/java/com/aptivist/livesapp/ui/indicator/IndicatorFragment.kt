@@ -22,7 +22,7 @@ class IndicatorFragment : Fragment() {
         indicatorViewModel =
                 ViewModelProviders.of(this).get(IndicatorViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_indicator, container, false)
-        val textView: TextView = root.findViewById(R.id.text_gallery)
+        val textView: TextView = root.findViewById(R.id.text_indicator)
         indicatorViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
