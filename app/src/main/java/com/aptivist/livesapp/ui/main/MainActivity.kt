@@ -47,7 +47,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navView:NavigationView
@@ -90,8 +90,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         ), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-       // navView.setNavigationItemSelectedListener(this)
+        navView.menu.findItem(R.id.nav_logout).setOnMenuItemClickListener { logout() }
 
         val user : UserData = intent.extras?.get(Constants.USER) as UserData
         getDataProfile(user)
@@ -120,35 +119,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         messagesUser.showToast(this,resources.getString(R.string.login_successful))
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId)
         {
             R.id.nav_logout -> logout()
         }
         return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
-    }
-
-    override fun onNavigationItemSelected(@NonNull item: MenuItem):Boolean {
-        when(item.itemId)
-        {
-            /*R.id.nav_home -> replaceFragment(HomeFragment())
-            R.id.nav_profile -> {
-                replaceFragment(ProfileFragment())
-            }
-            R.id.nav_indicators->{
-                replaceFragment(IndicatorFragment())
-            }*/
-            R.id.nav_logout -> logout()
-            else -> { Toast.makeText(this,"default",Toast.LENGTH_SHORT).show() }
-        }
-        //drawer_layout.closeDrawer(GravityCompat.START)
-        return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
-        //return super.onOptionsItemSelected(item)
-        //return true
-    }
+    }*/
 
 
-    private fun logout()
+    private fun logout():Boolean
     {
         /*LoginManager.getInstance().logOut()*/
         mainViewModel.logout()
@@ -160,7 +140,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         messagesUser.showToast(this,resources.getString(R.string.logout_successful))
-        finish()
+        return true
     }
 
     private fun replaceFragment(fragment:Fragment)
