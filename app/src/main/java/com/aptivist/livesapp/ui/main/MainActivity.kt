@@ -55,7 +55,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var mainViewModel: MainViewModel
     private lateinit var pHelper: SharePreferencesImpl
     private val messagesUser: IMessagesDialogs by inject()
-    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,7 +75,7 @@ class MainActivity : AppCompatActivity() {
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         navView = findViewById(R.id.nav_view)
-        navController = findNavController(R.id.nav_host_fragment)
+        val navController = findNavController(R.id.nav_host_fragment)
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -139,16 +138,11 @@ class MainActivity : AppCompatActivity() {
         var intent = Intent(this,StartActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+        messagesUser.showToast(this,"Logout success")
+        //Toast.makeText(this, "Logout success", Toast.LENGTH_SHORT).show()
+        //finish()
         messagesUser.showToast(this,resources.getString(R.string.logout_successful))
         return true
-    }
-
-    private fun replaceFragment(fragment:Fragment)
-    {
-        val fragmentTransition = supportFragmentManager.beginTransaction()
-        fragmentTransition.replace(R.id.drawer_layout,fragment)
-        fragmentTransition.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-        fragmentTransition.commit()
     }
 
 }
