@@ -44,7 +44,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navView:NavigationView
@@ -83,8 +83,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         ), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-        navView.setNavigationItemSelectedListener(this)
+        navView.menu.findItem(R.id.nav_logout).setOnMenuItemClickListener {
+            logout()
+        }
 
         val user : UserData = intent.extras?.get(Constants.USER) as UserData
         getDataProfile(user)
@@ -114,17 +115,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         messagesUser.showToast(this,"Login successful")
     }
 
-    override fun onNavigationItemSelected(@NonNull item: MenuItem):Boolean {
-        when(item.itemId)
-        {
-            R.id.nav_logout -> logout()
-        }
-        drawer_layout.closeDrawer(GravityCompat.START)
-        //return super.onOptionsItemSelected(item)
-        return true
-    }
-
-    private fun logout()
+    private fun logout() : Boolean
     {
         /*firebaseCredential.getFirebaseAuth().signOut()
         LoginManager.getInstance().logOut()*/
@@ -139,7 +130,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         startActivity(intent)
         messagesUser.showToast(this,"Logout success")
         //Toast.makeText(this, "Logout success", Toast.LENGTH_SHORT).show()
-        finish()
+        //finish()
+        return true
     }
 
 }
