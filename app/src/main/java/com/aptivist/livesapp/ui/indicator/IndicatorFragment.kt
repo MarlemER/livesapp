@@ -12,7 +12,7 @@ import com.aptivist.livesapp.R
 
 class IndicatorFragment : Fragment() {
 
-    private lateinit var indicatorViewModel: SettingViewModel
+    private lateinit var indicatorViewModel: IndicatorViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -20,7 +20,7 @@ class IndicatorFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         indicatorViewModel =
-                ViewModelProviders.of(this).get(SettingViewModel::class.java)
+                ViewModelProviders.of(this).get(IndicatorViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_indicator, container, false)
         val textView: TextView = root.findViewById(R.id.text_gallery)
         indicatorViewModel.text.observe(viewLifecycleOwner, Observer {

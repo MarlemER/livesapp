@@ -72,8 +72,14 @@ class FirebaseRepository(private val firebaseAccess:IFirebaseInstance?) : IRepos
     }
 
     override fun resertPass(email: String): MutableLiveData<Boolean>? {
-        val isSucces: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+        val isSucces: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
         firebaseAuth.sendPasswordResetEmail(email)
+
+            .addOnCompleteListener { task ->
+                isSucces.value = task.isSuccessful
+               // isSucces.value = task.isSuccessful
+            }
+/*
             .addOnSuccessListener { task->
                 //Log.d("*****","VALIDAOK")
                 isSucces.value = true
@@ -81,8 +87,8 @@ class FirebaseRepository(private val firebaseAccess:IFirebaseInstance?) : IRepos
             .addOnFailureListener{task->
                 //Log.d("*****","VALIDACANCEL"+task.message)
                 isSucces.value = false
-            }
-        return isSucces
+            }*/
+        return  isSucces
     }
 
     override fun tokenFacebook(): MutableLiveData<String> {

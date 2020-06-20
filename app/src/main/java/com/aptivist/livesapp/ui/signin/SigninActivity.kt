@@ -67,7 +67,7 @@ class SigninActivity : AppCompatActivity() {
     private fun signIn() {
         btnLoginFacebook.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
             override fun onSuccess(result: LoginResult?) {
-                Log.d("SUCCESS_FACE", "facebook:onSuccess:$result")
+                //Log.d("SUCCESS_FACE", "facebook:onSuccess:$result")
                 handleFacebookAccessToken(result?.accessToken)
             }
 
@@ -85,10 +85,10 @@ class SigninActivity : AppCompatActivity() {
         signinViewModel.createUser(authenticatedUser)
         signinViewModel.createdUserLiveData?.observe(this, Observer { user ->
             if (user.isCreated!!) {
-                messageUser.showToast(this,"User register successful")
+                messageUser.showToast(this,resources.getString(R.string.user_register_successful))
                 goToMainActivity(user)
             } else {
-                messageUser.showMessageOneOption("Error",user.messageResult?:"Try again","ok",R.drawable.ic_error,this)
+                messageUser.showMessageOneOption(resources.getString(R.string.error),user.messageResult?:resources.getString(R.string.try_again),resources.getString(R.string.ok),R.drawable.ic_error,this)
             }
         })
     }
@@ -107,7 +107,7 @@ class SigninActivity : AppCompatActivity() {
         signinViewModel.authenticatedUserLiveData?.observe(this, Observer { authenticatedUser ->
             if (!authenticatedUser.isCreated!!) {
                 createNewUser(authenticatedUser)
-                Toast.makeText(this, "User register successful", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, resources.getString(R.string.user_register_successful), Toast.LENGTH_SHORT).show()
             } else {
                 goToMainActivity(authenticatedUser)
             }
@@ -118,7 +118,7 @@ class SigninActivity : AppCompatActivity() {
         //validate if user exist
         if (validationUser.getEmailUser(emailUser) && validationUser.getPassUser(passUser))
         {
-            var userData = UserData("", "livesappUser", emailUser, passUser, false, false, false, "","")
+            var userData = UserData("", resources.getString(R.string.livesapp_user), emailUser, passUser, false, false, false, "","")
             createNewUser(userData)
 
             pHelper.setDataFirebase(SHAREPREF_EMAILUSER_FIREBASE,emailUser)
@@ -127,10 +127,10 @@ class SigninActivity : AppCompatActivity() {
         else
         {
             if (!Patterns.EMAIL_ADDRESS.matcher(edtSigninEmail.text.toString()).matches()) {
-                edtSigninEmail.error = "Enter an E-Mail Address"
+                edtSigninEmail.error = resources.getString(R.string.enter_email_valid)
             }
             if (edtSigninPassword.text.toString().isEmpty() || edtSigninPassword.text.toString().length < 7) {
-                edtSigninPassword.error = "Enter a Password, minimum 7 characters"
+                edtSigninPassword.error = resources.getString(R.string.enter_pass_valid)
             }
         }
     }

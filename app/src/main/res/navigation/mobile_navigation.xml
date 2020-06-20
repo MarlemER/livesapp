@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_profile">
+    app:startDestination="@id/nav_home">
 
     <fragment
-        android:id="@+id/nav_profile"
-        android:name="com.aptivist.livesapp.ui.profile.ProfileFragment"
-        android:label="@string/menu_profile"
-        tools:layout="@layout/fragment_profile">
+        android:id="@+id/nav_home"
+        android:name="com.aptivist.livesapp.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home">
 
         <action
             android:id="@+id/action_HomeFragment_to_HomeSecondFragment"
@@ -17,12 +17,10 @@
     </fragment>
     <fragment
         android:id="@+id/nav_home_second"
-        android:name="com.aptivist.livesapp.ui.profile.ProfileFragment"
-        android:label="@string/home_principal"
-        tools:layout="@layout/fragment_profile">
+        android:label="home second">
         <action
             android:id="@+id/action_HomeSecondFragment_to_HomeFragment"
-            app:destination="@id/nav_profile" />
+            app:destination="@id/nav_home" />
 
         <argument
             android:name="myArg"
@@ -30,8 +28,14 @@
     </fragment>
 
     <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.aptivist.livesapp.ui.profile.ProfileFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
         android:id="@+id/nav_indicators"
-        android:name="com.aptivist.livesapp.ui.indicator.SettingFragment"
+        android:name="com.aptivist.livesapp.ui.indicator.IndicatorFragment"
         android:label="@string/menu_indicators"
         tools:layout="@layout/fragment_indicator" />
 
@@ -40,4 +44,11 @@
         android:name="com.aptivist.livesapp.ui.statistic.StatisticFragment"
         android:label="@string/menu_statistics"
         tools:layout="@layout/fragment_statistic" />
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.aptivist.livesapp.ui.indicator.SettingFragment"
+        android:label="@string/menu_settings"
+        tools:layout="@layout/fragment_setting" />
+
 </navigation>

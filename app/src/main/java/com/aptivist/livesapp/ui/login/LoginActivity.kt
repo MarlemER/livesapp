@@ -76,12 +76,9 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.isResetPass?.observe(this, Observer {
             if(it)
             {
-                messagesUser.showMessageOneOption("Verify Email","Email send, check your Email for change the password","ok",R.drawable.ic_email,this)
-               // messagesUser.showToast(this,"Email send, check your Email for change the password")
-                //Toast.makeText(this@LoginActivity,"Email send, check your Email for change the password",Toast.LENGTH_LONG).show()
+                messagesUser.showMessageOneOption(resources.getString(R.string.verify_email),resources.getString(R.string.email_send),resources.getString(R.string.ok),R.drawable.ic_email,this)
             }else{
-                messagesUser.showToast(this,"Invalid email isn't registered, try again!")
-                //Toast.makeText(this@LoginActivity,"Invalid email isn't registered, try again!",Toast.LENGTH_LONG).show()
+                messagesUser.showMessageOneOption(resources.getString(R.string.error),resources.getString(R.string.invalid_email),resources.getString(R.string.ok),R.drawable.ic_error,this)
             }
         })
     }
@@ -95,9 +92,9 @@ class LoginActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
-                        messagesUser.showToast(this,"Login successful")
+                        messagesUser.showToast(this,resources.getString(R.string.login_successful))
                         //Toast.makeText(this,"Login successful",Toast.LENGTH_LONG).show()
-                        var userData = UserData("", "livesappUser", emailUser, passUser, true, false, true, Constants.PHOTO_USER_DEFAULT,"")
+                        var userData = UserData("", resources.getString(R.string.livesapp_user), emailUser, passUser, true, false, true, Constants.PHOTO_USER_DEFAULT,"")
                        /* user?.isCreated = true
                         user?.photoUser = Constants.PHOTO_USER_DEFAULT
                         user?.emailUser = edtSigninEmail.text.toString()
@@ -110,8 +107,7 @@ class LoginActivity : AppCompatActivity() {
                         finish()
                     } else {
                         // If sign in fails, display a message to the user.
-                        messagesUser.showToast(this,"Enter a valid account")
-                        //Toast.makeText(this,"Enter a valid account",Toast.LENGTH_LONG).show()
+                        messagesUser.showToast(this,resources.getString(R.string.valid_account))
                     }
                 }
         }
@@ -127,10 +123,10 @@ class LoginActivity : AppCompatActivity() {
         else
         {
             if (!Patterns.EMAIL_ADDRESS.matcher(edtSigninEmail.text.toString()).matches()) {
-                edtSigninEmail.error = "Enter an E-Mail Address"
+                edtSigninEmail.error = resources.getString(R.string.enter_email_valid)
             }
-            if (edtSigninPassword.text.toString().isEmpty() || edtSigninPassword.text.toString().length < 7) {
-                edtSigninPassword.error = "Enter a Password, minimum 7 characters"
+            if (edtSigninPassword.text.toString().isEmpty()) {
+                edtSigninPassword.error = resources.getString(R.string.enter_pass)
             }
             valid = false
         }
@@ -147,12 +143,12 @@ class LoginActivity : AppCompatActivity() {
                 }
 
                 override fun onCancel() {
-                    messagesUser.showToast(this@LoginActivity,"Login successful:onCancel")
+                    messagesUser.showToast(this@LoginActivity,resources.getString(R.string.login_successful))
                     //Toast.makeText(this@LoginActivity,"Login successful:onCancel",Toast.LENGTH_LONG).show()
                 }
 
                 override fun onError(error: FacebookException) {
-                    messagesUser.showToast(this@LoginActivity,"Login successful:onError")
+                    messagesUser.showToast(this@LoginActivity,resources.getString(R.string.login_successful))
                     //Toast.makeText(this@LoginActivity,"Login successful:onError",Toast.LENGTH_LONG).show()
                 }
             })
@@ -194,20 +190,18 @@ class LoginActivity : AppCompatActivity() {
         resetValidations()
         if(validationUser.getEmailUser(edtSigninEmail.text.toString()))
             {
-               if(loginViewModel.resetPass(edtSigninEmail.text.toString())!!)
-               {
-                   messagesUser.showMessageOneOption("Verify Email","Email send, check your Email for change the password","ok",R.drawable.ic_email,this)
-               }else{
-                   messagesUser.showMessageOneOption("Error","Try again","ok",R.drawable.ic_error,this)
-               }
-                //messagesUser.showToast(this,"Password is send")
-                //Toast.makeText(this@LoginActivity,"Password is send",Toast.LENGTH_LONG).show()
-
-
+                loginViewModel.resetPass(edtSigninEmail.text.toString())
+                loginViewModel.isResetPass?.observe(this, Observer { isReset->
+                    if(isReset.equals(true))
+                    {
+                        messagesUser.showMessageOneOption(resources.getString(R.string.verify_email),resources.getString(R.string.email_send),resources.getString(R.string.ok),R.drawable.ic_email,this)
+                    }else{
+                        messagesUser.showMessageOneOption(resources.getString(R.string.error),resources.getString(R.string.invalid_email),resources.getString(R.string.ok),R.drawable.ic_error,this)
+                    }
+                })
             }else{
-            messagesUser.showToast(this,"Introduce a valid email for continue")
-            //Toast.makeText(this@LoginActivity,"Introduce a valid email for continue",Toast.LENGTH_LONG).show()
-            edtSigninEmail.error = "Enter an E-Mail Address"
+            messagesUser.showToast(this,resources.getString(R.string.enter_email_continue))
+            edtSigninEmail.error = resources.getString(R.string.enter_email_valid)
         }
 
     }
