@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_HomeFragment_to_HomeSecondFragment"
             app:destination="@id/nav_home_second" />
+        <action
+            android:id="@+id/goToIncidenceFragment"
+            app:destination="@id/newIncidenceFragment" />
     </fragment>
     <fragment
         android:id="@+id/nav_home_second"
@@ -50,5 +53,10 @@
         android:name="com.aptivist.livesapp.ui.indicator.SettingFragment"
         android:label="@string/menu_settings"
         tools:layout="@layout/fragment_setting" />
+    <fragment
+        android:id="@+id/newIncidenceFragment"
+        android:name="com.aptivist.livesapp.ui.newIncidence.NewIncidenceFragment"
+        android:label="new_incidence_fragment"
+        tools:layout="@layout/new_incidence_fragment" />
 
 </navigation>

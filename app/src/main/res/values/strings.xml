@@ -61,5 +61,10 @@
     //String for Sign in
     <string name="user_register_successful">User register successful</string>
     <string name="try_again">Try again!</string>
+    <string name="complete_to_continue">Complete to continue</string>
+    <string name="picture">Picture....</string>
+    <string name="location">Location....</string>
+    <string name="date">Date....</string>
+    <string name="save">Save</string>
 
 </resources>

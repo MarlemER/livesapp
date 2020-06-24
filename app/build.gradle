@@ -58,6 +58,7 @@ ext {
     dagger_version = "2.27"
     picasso_version = "2.71828"
     circularImage_version = "3.1.0"
+    cardView_version = "1.0.0"
 }
 
 dependencies {
@@ -110,4 +111,5 @@ dependencies {
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-android-scope:$koin_version"
     implementation "org.koin:koin-android-viewmodel:$koin_version"
+    implementation "androidx.cardview:cardview:$cardView_version"
 }

@@ -1,5 +1,6 @@
 package com.aptivist.livesapp.ui.main
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -33,6 +34,7 @@ import com.aptivist.livesapp.helpers.Constants.Companion.SHAREPREF_TOKEN_FACEBOO
 import com.aptivist.livesapp.model.UserData
 import com.aptivist.livesapp.ui.home.HomeFragment
 import com.aptivist.livesapp.ui.indicator.IndicatorFragment
+import com.aptivist.livesapp.ui.newIncidence.NewIncidenceFragment
 import com.aptivist.livesapp.ui.profile.ProfileFragment
 import com.aptivist.livesapp.ui.signin.SigninViewModel
 import com.aptivist.livesapp.ui.splash.SplashActivity
@@ -66,16 +68,11 @@ class MainActivity : AppCompatActivity() {
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+        val navController:NavController = findNavController(R.id.nav_host_fragment)
 
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         navView = findViewById(R.id.nav_view)
-        val navController = findNavController(R.id.nav_host_fragment)
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
