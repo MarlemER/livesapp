@@ -8,8 +8,10 @@ import com.aptivist.livesapp.di.implementation.UserSessionImpl
 import com.aptivist.livesapp.di.interfaces.IFirebaseInstance
 import com.aptivist.livesapp.di.interfaces.IMessagesDialogs
 import com.aptivist.livesapp.di.interfaces.ISessionSignin
+import com.aptivist.livesapp.ui.newIncidence.NewIncidenceViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
@@ -38,5 +40,6 @@ class MainApplication:Application() {
 
     private val viewModelModule = module {
        // viewModel { SigninViewModel() }
+        viewModel { NewIncidenceViewModel() }
     }
 }

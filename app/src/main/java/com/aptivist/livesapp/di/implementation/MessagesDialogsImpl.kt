@@ -2,6 +2,7 @@ package com.aptivist.livesapp.di.implementation
 
 import android.app.AlertDialog
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.view.ContextThemeWrapper
 import android.widget.Toast
@@ -35,6 +36,13 @@ class MessagesDialogsImpl:IMessagesDialogs {
                     showToast(context,message)
                 }
             }
+            .create().show()
+    }
+
+    override fun showMessagePreview(title: String, message: String?, context: Context) {
+        AlertDialog.Builder(ContextThemeWrapper(context,R.style.AlertDialogCustom))
+            .setTitle(title)
+            .setMessage(message)
             .create().show()
     }
 
