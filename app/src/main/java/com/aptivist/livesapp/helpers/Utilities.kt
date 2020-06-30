@@ -3,8 +3,13 @@ package com.aptivist.livesapp.helpers
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import java.io.ByteArrayOutputStream
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class Utilities {
 
@@ -44,4 +49,5 @@ class Utilities {
     fun dateTimeFormat(calendar:Calendar?):String{
        return SimpleDateFormat("MMM dd, YYYY HH:mm a", Locale.US).format(calendar?.time).toString()
     }
+
 }
