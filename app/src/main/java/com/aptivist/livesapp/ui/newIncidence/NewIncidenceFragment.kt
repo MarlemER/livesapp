@@ -133,6 +133,7 @@ class NewIncidenceFragment : Fragment() {
             openCamera(it)
          // uri = dispatchTakePictureIntent()
             //requestPermissions()
+
         }
 
         txtPicturePreview.setOnClickListener {
@@ -299,26 +300,28 @@ class NewIncidenceFragment : Fragment() {
                          val extras = data?.extras
                          val imageBitmap = extras!!.get("data") as Bitmap
                         //val url = Uri.parse(url)
-                        val stream = activity!!.contentResolver.openInputStream(Uri.parse(url))
-                        val imageBitMap = BitmapFactory.decodeStream(stream)
+                       // val stream = activity!!.contentResolver.openInputStream(Uri.parse(url))
+                       // val imageBitMap = BitmapFactory.decodeStream(stream)
 
 
-
+                        var f = File(url)
                         var dialogBuilder = AlertDialog.Builder(ContextThemeWrapper(context,R.style.AlertDialogCustom))
                         var inflater = this.getLayoutInflater()
                         var dialogView = inflater.inflate(R.layout.picture_preview, null);
-                                         dialogBuilder.setView(dialogView)
                         var imgVw = dialogView.findViewById<ImageView>(R.id.imgPreview)
+                        dialogBuilder.setView(dialogView)
 
                         //imgVw?.setImageBitmap(imageBitMap)
-                        var  imageContent:Uri? = data.data
-                        Picasso.get().load(url).into(imgVw)
+                       // var  imageContent:Uri? = data.data
 
 
+                        if(f.exists()){
+                            Picasso.get().load(f).into(imgVw)
+                        }
 
-                        Picasso.get().load(url).into(imgVw)
                         dialogBuilder.create()
                         dialogBuilder.show()
+
 
 
                         /*
