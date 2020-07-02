@@ -41,7 +41,7 @@
     <string name="login">Login</string>
     <string name="reset_the_password">Reset my password</string>
     <string name="create_an_account">Create an account</string>
-    
+
     //Strings for login
     <string name="login_successful">Login successful</string>
     <string name="livesapp_user">livesappUser</string>
@@ -52,7 +52,7 @@
     <string name="verify_email">Verify Email</string>
     <string name="email_send">Email send, check your Email for change the password</string>
     <string name="ok">ok</string>
-    <string name="invalid_email">Invalid email isn\'t registered, try again!</string>    
+    <string name="invalid_email">Invalid email isn\'t registered, try again!</string>
     <string name="enter_email_continue">Introduce a valid email for continue</string>
     <string name="error">Error</string>
     <string name="email_livesapp">livesapp@support.com</string>
@@ -66,5 +66,6 @@
     <string name="location">Location....</string>
     <string name="date">Date....</string>
     <string name="save">Save</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

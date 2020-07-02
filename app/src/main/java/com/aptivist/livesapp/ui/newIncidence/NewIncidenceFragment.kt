@@ -73,6 +73,7 @@ class NewIncidenceFragment : Fragment() {
     val writeStorage = android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     val readStorage = android.Manifest.permission.READ_EXTERNAL_STORAGE
     private lateinit var url: String
+    private lateinit var bitMap:Bitmap
 
     lateinit var binding: NewIncidenceFragmentBinding
 
@@ -126,45 +127,24 @@ class NewIncidenceFragment : Fragment() {
                 c.set(Calendar.MINUTE,minute)
                 txtDateTime.text = SimpleDateFormat("MMM dd, YYYY HH:mm a", Locale.US).format(c.time)
             }
-            //txtDateTime.text = utilities?.dateTimeFormat(utilities?.calendarDatePicker(it.context)).toString()
         }
 
         btnOpenCamera.setOnClickListener {
-            openCamera(it)
-         // uri = dispatchTakePictureIntent()
-            //requestPermissions()
-
+            requestPermissions()
         }
 
         txtPicturePreview.setOnClickListener {
-            openPicturePreview(it,uri)
+            showPicture(bitMap)
         }
     }
 
-    private fun openCamera(it:View){
+    private fun openCamera(){
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-
             var archivoFtot: File? = null
             archivoFtot = crearArchivoImagen()
             uri = FileProvider.getUriForFile(activity!!, "com.aptivist.livesapp.fileprovider", archivoFtot)
-
             takePictureIntent.resolveActivity(activity!!.packageManager)?.also {
                 startActivityForResult(takePictureIntent, REQUEST_CODE_CAMERA)
-            }
-        }
-    }
-
-
-    fun takePicture(){
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if(intent.resolveActivity(activity!!.packageManager)!= null)
-        {
-            var archivoFtot: File? = null
-            archivoFtot = crearArchivoImagen()
-            if(archivoFtot != null){
-                val urlFoto = FileProvider.getUriForFile(activity!!, "com.aptivist.livesapp.fileprovider", archivoFtot)
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, urlFoto)
-                startActivityForResult(intent, REQUEST_CODE_CAMERA)
             }
         }
     }
@@ -185,8 +165,7 @@ class NewIncidenceFragment : Fragment() {
         when(requestCode){
             REQUEST_PERMISSION_CAMERA->{
                 if(grantResults.isNotEmpty() && grantResults[0]==PackageManager.PERMISSION_GRANTED && grantResults[1]==PackageManager.PERMISSION_GRANTED && grantResults[2]==PackageManager.PERMISSION_GRANTED){
-                    //dispatchTakePictureIntent()
-                    takePicture()
+                    openCamera()
                 }else
                 {
                     context?.applicationContext?.let { messageUser.showToast(it,"Failed") }
@@ -194,54 +173,6 @@ class NewIncidenceFragment : Fragment() {
             }
         }
     }
-
-    private fun createImageFile(): File {
-        // Create an image file name
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir: File? =  context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        //val storageDir = Environment.getExternalStorageDirectory()
-        //val storageDir = File(Environment.getExternalStorageDirectory()+"/yourlocation")
-        return File.createTempFile(
-            "JPEG_${timeStamp}_", /* prefix */
-            ".jpg", /* suffix */
-            storageDir /* directory */
-        ).apply {
-            // Save a file: path for use with ACTION_VIEW intents
-            currentPhotoPath = absolutePath
-        }
-    }
-
-
-    private fun dispatchTakePictureIntent(): Uri {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            // Ensure that there's a camera activity to handle the intent
-            takePictureIntent.resolveActivity(activity!!.packageManager)?.also {
-                // Create the File where the photo should go
-                val photoFile: File? = try {
-                    createImageFile()
-                } catch (ex: IOException) {
-                    // Error occurred while creating the File
-                    null
-                }
-                // Continue only if the File was successfully created
-                photoFile?.also {
-                     uri = FileProvider.getUriForFile(
-                        activity!!,
-                        "com.aptivist.livesapp.fileprovider",
-                        it
-                    )
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
-                    startActivityForResult(takePictureIntent, REQUEST_CODE_CAMERA)
-                }
-            }
-        }
-        return uri
-    }
-
-
-
-
-
 
     fun crearArchivoImagen(): File {
         val timeStamp =  SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
@@ -253,157 +184,40 @@ class NewIncidenceFragment : Fragment() {
         return imagen
     }
 
-
-    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        //super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_CAMERA && resultCode == RESULT_OK) {
-            val imageBitmap = data?.extras?.get("data") as Bitmap
-            //imageView.setImageBitmap(imageBitmap)
+            bitMap = data?.extras?.get("data") as Bitmap
+            uri = Uri.parse(url)
+            Log.d("*****",uri.toString())
+            val stream = activity!!.contentResolver.openInputStream(uri)
+            showPicture(bitMap)
             txtPicturePreview.text = "Preview"
-            var dt = (data)
-            if(dt!=null)
-            {
-                uri = data?.data!!
-
-                AlertDialog.Builder(ContextThemeWrapper(context,R.style.AlertDialogCustom))
-                    .setTitle("Preview")
-                    .setView(R.layout.picture_preview)
-
-
-
-                    .create().show()
-                Picasso.get().load(data.data).into(imgNewIncidencePreview)
-
-            }
-        }else{
+        }else
+        {
             txtPicturePreview.text = "No image"
         }
     }
-*/
-    private fun galleryAddPic() {
-        Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).also { mediaScanIntent ->
-            val f = File(currentPhotoPath)
-            mediaScanIntent.data = Uri.fromFile(f)
-            context?.sendBroadcast(mediaScanIntent)
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if(data!=null)
-        {
-            when(requestCode){
-                REQUEST_CODE_CAMERA -> {
-                    if(resultCode == RESULT_OK){
-                        //Obtener imagen
-                         val extras = data?.extras
-                         val imageBitmap = extras!!.get("data") as Bitmap
-                        //val url = Uri.parse(url)
-                       // val stream = activity!!.contentResolver.openInputStream(Uri.parse(url))
-                       // val imageBitMap = BitmapFactory.decodeStream(stream)
 
 
-                        var f = File(url)
-                        var dialogBuilder = AlertDialog.Builder(ContextThemeWrapper(context,R.style.AlertDialogCustom))
-                        var inflater = this.getLayoutInflater()
-                        var dialogView = inflater.inflate(R.layout.picture_preview, null);
-                        var imgVw = dialogView.findViewById<ImageView>(R.id.imgPreview)
-                        dialogBuilder.setView(dialogView)
-
-                        //imgVw?.setImageBitmap(imageBitMap)
-                       // var  imageContent:Uri? = data.data
-
-
-                        if(f.exists()){
-                            Picasso.get().load(f).into(imgVw)
-                        }
-
-                        dialogBuilder.create()
-                        dialogBuilder.show()
-
-
-
-                        /*
-
-                       var alert = AlertDialog.Builder(ContextThemeWrapper(context,R.style.AlertDialogCustom))
-                            .setTitle("Preview")
-                            .setView(View.inflate(context,R.layout.picture_preview))
-                            .create()
-                        var imgVw = alert.findViewById<ImageView>(R.id.imgPreview)
-                        Picasso.get().load(uri).into(imgVw)
-                            alert.show()*/
-
-
-                       /* val dialog = context?.let { Dialog(it) }
-                         //dialog?.setOnDismissListener(onDismissListener)
-                        dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                        dialog?.setCancelable(true)
-                        dialog?.setContentView(R.layout.picture_preview)
-
-                        val imVw = dialog?.findViewById<ImageView>(R.id.imgPreview)
-                        Picasso.get().load(uri).into(imVw)
-
-                        dialog?.create()
-                        dialog?.show()*/
-
-
-
-
-
-
-                        //imgPreview?.setImageBitmap(imageBitMap)
-                        txtPicturePreview.text = "Preview"
-                    }
-                    else{
-                        //
-                        // Se cancelo la captura
-                        txtPicturePreview.text = "No img"
-                    }
-                }
-
-        }
-
-        }
-    }
-
-
-    fun openPicturePreview(it:View, uri: Uri?){
-        //messageUser.showMessagePreview("Preview","Show image",it.context)
-       /* val dialog = context?.let { Dialog(it) }
-       // dialog?.setOnDismissListener(onDismissListener)
-        dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog?.setCancelable(false)
-        dialog?.setContentView()*/
-
-
-       /* AlertDialog.Builder(ContextThemeWrapper(context,R.style.AlertDialogCustom))
+    fun showPicture(bitMap:Bitmap){
+        val mDialogView = LayoutInflater.from(context).inflate(R.layout.picture_preview, null)
+        val mBuilder = AlertDialog.Builder(context)
+            .setView(mDialogView)
             .setTitle("Preview")
-            .setView(R.layout.picture_preview)
-            .create().show()
-        Picasso.get().load(uri).into(imgPreview)*/
-
-
-        val dialog = context?.let { Dialog(it) }
-        //dialog?.setOnDismissListener(onDismissListener)
-        dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog?.setCancelable(true)
-        dialog?.setContentView(R.layout.picture_preview)
-
-        val imVw = dialog?.findViewById<ImageView>(R.id.imgPreview)
-        Picasso.get().load(uri).into(imVw)
-
-        dialog?.show()
-
-
-        //messageUser.showMessagePreview("Preview","Show image",it.context)
+        var img = mDialogView.findViewById<ImageView>(R.id.imgPreview)
+        img?.setImageBitmap(bitMap)
+        var f = File(url)
+        if(f.exists())
+        {
+            Picasso.get().load(uri.toString()).into(img)
+        }else{
+            Log.d("******","no data")
+        }
+        Log.d("///",url)
+        Log.d("////",uri.toString())
+        mBuilder.show()
     }
-
-    /*fun getPhotoPreview(fileName:String,it:View):File{
-        val storageDirectory = getExternalFilesDirs(it.context,Environment.DIRECTORY_PICTURES)
-        return File.createTempFile(fileName,".jpg", storageDirector)
-    }*/
-
 
     fun selectColor(view: View){
         for(item in glNewIncidence.children)
