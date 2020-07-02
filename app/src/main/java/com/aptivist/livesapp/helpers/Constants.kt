@@ -12,6 +12,7 @@ class Constants {
         val SHAREPREF_EMAILUSER_FIREBASE:String="emailFirebase"
         val SHAREPREF_PASSUSER_FIREBASE:String="passFirebase"
         val REQUEST_CODE_CAMERA = 10
+        val REQUEST_PERMISSION_CAMERA = 11
         val PICTURE_NAME = "LIVESAPP_PICTURE"
     }
 }
