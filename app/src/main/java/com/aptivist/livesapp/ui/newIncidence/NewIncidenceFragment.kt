@@ -28,6 +28,7 @@ import androidx.core.view.children
 import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 
@@ -38,6 +39,9 @@ import com.aptivist.livesapp.helpers.Constants.Companion.PICTURE_NAME
 import com.aptivist.livesapp.helpers.Constants.Companion.REQUEST_CODE_CAMERA
 import com.aptivist.livesapp.helpers.Constants.Companion.REQUEST_PERMISSION_CAMERA
 import com.aptivist.livesapp.helpers.Utilities
+import com.aptivist.livesapp.ui.home.HomeFragment
+import com.aptivist.livesapp.ui.main.MainActivity
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.protobuf.compiler.PluginProtos
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.new_incidence_fragment.*
@@ -53,6 +57,7 @@ import java.io.IOException
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.zip.Inflater
 import kotlin.collections.ArrayList
 
 class NewIncidenceFragment : Fragment() {
@@ -74,6 +79,7 @@ class NewIncidenceFragment : Fragment() {
     val readStorage = android.Manifest.permission.READ_EXTERNAL_STORAGE
     private lateinit var url: String
     private lateinit var bitMap:Bitmap
+    lateinit var navController: NavController
 
     lateinit var binding: NewIncidenceFragmentBinding
 
@@ -86,6 +92,7 @@ class NewIncidenceFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.newIncidenceFragment = this
         binding.newIncidenceViewModel = viewModelFragment
+
         return binding.root
     }
 
@@ -98,6 +105,7 @@ class NewIncidenceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = view.findNavController()
         btnOpenDate.setOnClickListener {
             var c = Calendar.getInstance()
             var year = c.get(Calendar.YEAR)
@@ -128,26 +136,18 @@ class NewIncidenceFragment : Fragment() {
                 txtDateTime.text = SimpleDateFormat("MMM dd, YYYY HH:mm a", Locale.US).format(c.time)
             }
         }
-
         btnOpenCamera.setOnClickListener {
             requestPermissions()
         }
-
         txtPicturePreview.setOnClickListener {
-            showPicture(bitMap)
+            showPicture(uri)
         }
+        btnOpenLocation.setOnClickListener {
+                navController.navigate(R.id.goToHomeMap)
+        }
+
     }
 
-    private fun openCamera(){
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            var archivoFtot: File? = null
-            archivoFtot = crearArchivoImagen()
-            uri = FileProvider.getUriForFile(activity!!, "com.aptivist.livesapp.fileprovider", archivoFtot)
-            takePictureIntent.resolveActivity(activity!!.packageManager)?.also {
-                startActivityForResult(takePictureIntent, REQUEST_CODE_CAMERA)
-            }
-        }
-    }
 
     private fun requestPermissions(){
        var isRequired = ActivityCompat.shouldShowRequestPermissionRationale(activity!!,permissionCamera)
@@ -174,12 +174,23 @@ class NewIncidenceFragment : Fragment() {
         }
     }
 
-    fun crearArchivoImagen(): File {
-        val timeStamp =  SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val nombre ="JPEG_" + timeStamp + "_"
-        val directorio = context!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+    private fun openCamera(){
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            var filePicture: File? = null
+            filePicture = createFileImage()
+            uri = FileProvider.getUriForFile(activity!!, "com.aptivist.livesapp.fileprovider", filePicture)
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,uri)
+            takePictureIntent.resolveActivity(activity!!.packageManager)?.also {
+                startActivityForResult(takePictureIntent, REQUEST_CODE_CAMERA)
+            }
+        }
+    }
 
-        val imagen  = File.createTempFile(nombre,".jpg", directorio)
+    fun createFileImage(): File {
+        val timeStamp =  SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val name ="JPEG_" + timeStamp + "_"
+        val directory = context!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val imagen  = File.createTempFile(name,".jpg", directory)
         url = "file://" + imagen.absolutePath
         return imagen
     }
@@ -187,11 +198,7 @@ class NewIncidenceFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         //super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_CAMERA && resultCode == RESULT_OK) {
-            bitMap = data?.extras?.get("data") as Bitmap
-            uri = Uri.parse(url)
-            Log.d("*****",uri.toString())
-            val stream = activity!!.contentResolver.openInputStream(uri)
-            showPicture(bitMap)
+           showPicture(uri)
             txtPicturePreview.text = "Preview"
         }else
         {
@@ -200,22 +207,16 @@ class NewIncidenceFragment : Fragment() {
     }
 
 
-    fun showPicture(bitMap:Bitmap){
+    private fun showPicture(uri:Uri){
         val mDialogView = LayoutInflater.from(context).inflate(R.layout.picture_preview, null)
         val mBuilder = AlertDialog.Builder(context)
             .setView(mDialogView)
             .setTitle("Preview")
         var img = mDialogView.findViewById<ImageView>(R.id.imgPreview)
-        img?.setImageBitmap(bitMap)
-        var f = File(url)
-        if(f.exists())
-        {
-            Picasso.get().load(uri.toString()).into(img)
-        }else{
-            Log.d("******","no data")
+        var f = File(uri.toString())
+        if(!f.exists()){
+            Picasso.get().load(uri).resize(800, 1500).centerCrop().into(img)
         }
-        Log.d("///",url)
-        Log.d("////",uri.toString())
         mBuilder.show()
     }
 
@@ -230,5 +231,6 @@ class NewIncidenceFragment : Fragment() {
             }
         }
     }
+
 
 }

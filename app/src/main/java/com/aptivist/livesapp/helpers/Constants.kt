@@ -14,5 +14,7 @@ class Constants {
         val REQUEST_CODE_CAMERA = 10
         val REQUEST_PERMISSION_CAMERA = 11
         val PICTURE_NAME = "LIVESAPP_PICTURE"
+        val LOCATION_PERMISSION_REQUEST_CODE = 1
+        val AUTOCOMPLETE_REQUEST_CODE = 1
     }
 }

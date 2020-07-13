@@ -59,6 +59,8 @@ ext {
     picasso_version = "2.71828"
     circularImage_version = "3.1.0"
     cardView_version = "1.0.0"
+    googleMapsPlaces_version = "2.3.0"
+    googleMapsLocation_version = "11.8.0"
 }
 
 dependencies {
@@ -113,4 +115,7 @@ dependencies {
     implementation "org.koin:koin-android-scope:$koin_version"
     implementation "org.koin:koin-android-viewmodel:$koin_version"
     implementation "androidx.cardview:cardview:$cardView_version"
+    implementation "com.google.android.libraries.places:places:$googleMapsPlaces_version"
+    implementation "com.google.android.gms:play-services-location:$googleMapsLocation_version"
+
 }

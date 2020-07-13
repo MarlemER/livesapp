@@ -67,5 +67,6 @@
     <string name="date">Date....</string>
     <string name="save">Save</string>
     <string name="title_activity_maps">Map</string>
+    <string name="Location">Location...</string>
 
 </resources>

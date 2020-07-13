@@ -57,6 +57,10 @@
         android:id="@+id/newIncidenceFragment"
         android:name="com.aptivist.livesapp.ui.newIncidence.NewIncidenceFragment"
         android:label="new_incidence_fragment"
-        tools:layout="@layout/new_incidence_fragment" />
+        tools:layout="@layout/new_incidence_fragment" >
+        <action
+            android:id="@+id/goToHomeMap"
+            app:destination="@id/nav_home" />
+    </fragment>
 
 </navigation>
