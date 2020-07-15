@@ -5,13 +5,14 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.widget.ImageView
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class Utilities {
+open class Utilities {
 
     fun calendarDatePicker(context: Context):Calendar{
         var c = Calendar.getInstance()
@@ -46,8 +47,12 @@ class Utilities {
         return c
     }
 
-    fun dateTimeFormat(calendar:Calendar?):String{
+    private fun dateTimeFormat(calendar:Calendar?):String{
        return SimpleDateFormat("MMM dd, YYYY HH:mm a", Locale.US).format(calendar?.time).toString()
+    }
+
+    fun validationFieldsNewIncidence(imageAddNewIncidence:ImageView,imageCapturePhone:ImageView,latitude:Int,longitude:Int,dateTime:Calendar):Boolean{
+        return imageAddNewIncidence!=null && longitude!=null && latitude!=null && dateTime!= null
     }
 
 }

@@ -286,7 +286,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:textSize="17dp"
+                android:textSize="14dp"
                 android:textColor="@color/colorButtonRed"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/btnOpenCamera"
@@ -324,6 +324,23 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"></TextView>
 
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/txtLocationPreview"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="14dp"
+                android:textColor="@color/colorButtonRed"
+                android:textStyle="bold"
+                android:scrollbars="vertical"
+                android:scrollbarAlwaysDrawVerticalTrack="true"
+                android:maxLines="4"
+                android:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btnOpenLocation"
+                app:layout_constraintStart_toEndOf="@+id/textView2"></com.google.android.material.textview.MaterialTextView>
+
+
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -360,7 +377,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:textSize="17dp"
+                android:textSize="14dp"
                 android:textColor="@color/colorButtonRed"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"

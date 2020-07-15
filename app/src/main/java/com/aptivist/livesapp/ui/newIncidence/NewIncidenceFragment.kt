@@ -136,16 +136,11 @@ class NewIncidenceFragment : Fragment() {
                 txtDateTime.text = SimpleDateFormat("MMM dd, YYYY HH:mm a", Locale.US).format(c.time)
             }
         }
-        btnOpenCamera.setOnClickListener {
-            requestPermissions()
-        }
-        txtPicturePreview.setOnClickListener {
-            showPicture(uri)
-        }
-        btnOpenLocation.setOnClickListener {
-                navController.navigate(R.id.goToHomeMap)
-        }
-
+        btnOpenCamera.setOnClickListener {requestPermissions() }
+        txtPicturePreview.setOnClickListener {showPicture(uri) }
+        btnOpenLocation.setOnClickListener { navController.navigate(R.id.goToHomeMap) }
+        txtLocationPreview.text = arguments?.getString("addressLocation")
+        btnSaveIncident.setOnClickListener { saveNewIncidence() }
     }
 
 
@@ -230,6 +225,10 @@ class NewIncidenceFragment : Fragment() {
                 item.setCardBackgroundColor(Color.parseColor("#ACDBF1"))
             }
         }
+    }
+
+    private fun saveNewIncidence(){
+
     }
 
 
