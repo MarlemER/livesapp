@@ -3,7 +3,6 @@ package com.aptivist.livesapp.ui.home
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import androidx.lifecycle.ViewModelProviders
@@ -21,6 +20,7 @@ import androidx.navigation.findNavController
 import com.aptivist.livesapp.R
 import com.aptivist.livesapp.di.interfaces.IMessagesDialogs
 import com.aptivist.livesapp.helpers.Constants.Companion.LOCATION_PERMISSION_REQUEST_CODE
+import com.aptivist.livesapp.helpers.OnBackClickListener
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -40,11 +40,11 @@ import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.android.synthetic.main.new_incidence_fragment.*
 import org.koin.android.ext.android.inject
 import java.util.*
 
-class HomeFragment : Fragment(),OnMapReadyCallback,SearchView.OnQueryTextListener, GoogleMap.OnMapClickListener{
+class HomeFragment : Fragment(),OnMapReadyCallback,SearchView.OnQueryTextListener, GoogleMap.OnMapClickListener,
+    OnBackClickListener {
 
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var mMap: GoogleMap
@@ -84,10 +84,6 @@ class HomeFragment : Fragment(),OnMapReadyCallback,SearchView.OnQueryTextListene
                 .setAction("Action", null).show()*/
             navController.navigate(R.id.goToIncidenceFragment)
         }
-        btnSaveIncident.setOnClickListener {
-
-        }
-
         //mapFragment?.getMapAsync(this)
     }
 
@@ -111,7 +107,7 @@ class HomeFragment : Fragment(),OnMapReadyCallback,SearchView.OnQueryTextListene
 
 
 
-    fun setUpGoogleMap(googleMap: GoogleMap){
+    private fun setUpGoogleMap(googleMap: GoogleMap){
 
         if (ActivityCompat.checkSelfPermission(activity!!,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -180,7 +176,6 @@ class HomeFragment : Fragment(),OnMapReadyCallback,SearchView.OnQueryTextListene
             startActivityForResult(intent,100)
             Log.d("*****","onQueryTextChange")
         }
-
         return false
     }
 
@@ -210,7 +205,21 @@ class HomeFragment : Fragment(),OnMapReadyCallback,SearchView.OnQueryTextListene
         //Log.d("*****",addressCurrently.toString())
         mMap.clear()
         mMap.addMarker(MarkerOptions().position(place).title(addressCurrently.toString()))
-        messagesUser.showMessageLocationGM("Are you sure to add the current bookmark?","$addressCurrently","OK",R.drawable.ic_error,activity!!,view!!,"$addressCurrently".toString())
+        messagesUser.showMessageLocationGM("Are you sure to add the current bookmark?","$addressCurrently","OK",R.drawable.ic_error,activity!!,view!!,"$addressCurrently".toString(),place.longitude,place.latitude)
         }
+
+    override fun onBackClick(): Boolean {
+        return !flagSearchLocation
+        Log.d("***",flagSearchLocation.toString())
+    }
+
+    /* override fun onBackPressed(): Boolean {
+         if (searchBar.focusedChild == null) {
+             updateFocus(FocusSearchAction.BACK_PRESSED)
+             return true
+         }
+         return false
+     }*/
+
 }
 

@@ -5,6 +5,7 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.widget.ImageView
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -51,8 +52,8 @@ open class Utilities {
        return SimpleDateFormat("MMM dd, YYYY HH:mm a", Locale.US).format(calendar?.time).toString()
     }
 
-    fun validationFieldsNewIncidence(imageAddNewIncidence:ImageView,imageCapturePhone:ImageView,latitude:Int,longitude:Int,dateTime:Calendar):Boolean{
-        return imageAddNewIncidence!=null && longitude!=null && latitude!=null && dateTime!= null
+    fun validationFieldsNewIncidence(optionAddNewIncidence:Int?, latitude:Double?, longitude:Double?, dateTime:String?):Boolean{
+        return optionAddNewIncidence!=null && longitude!=null && latitude!=null && dateTime!= null
     }
 
 }

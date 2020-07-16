@@ -39,6 +39,7 @@
                 app:cardCornerRadius="2dp"
                 app:cardElevation="2dp"
                 app:cardBackgroundColor="#ACDBF1"
+                android:tag="1"
                 android:onClick="@{(v)->newIncidenceFragment.selectColor(v)}"
                 android:clickable="true"
                 android:foreground="?android:attr/selectableItemBackground">
@@ -63,6 +64,7 @@
                 app:cardCornerRadius="2dp"
                 app:cardElevation="2dp"
                 app:cardBackgroundColor="#ACDBF1"
+                android:tag="2"
                 android:clickable="true"
                 android:onClick="@{(v)->newIncidenceFragment.selectColor(v)}"
                 android:foreground="?android:attr/selectableItemBackground">
@@ -86,6 +88,7 @@
                 android:layout_margin="2dp"
                 app:cardCornerRadius="2dp"
                 app:cardElevation="2dp"
+                android:tag="3"
                 android:onClick="@{(v)->newIncidenceFragment.selectColor(v)}"
                 app:cardBackgroundColor="#ACDBF1"
                 android:clickable="true"
@@ -111,6 +114,7 @@
                 app:cardCornerRadius="2dp"
                 app:cardElevation="2dp"
                 android:clickable="true"
+                android:tag="4"
                 app:cardBackgroundColor="#ACDBF1"
                 android:onClick="@{(v)->newIncidenceFragment.selectColor(v)}"
                 android:foreground="?android:attr/selectableItemBackground">
@@ -135,6 +139,7 @@
                 app:cardCornerRadius="2dp"
                 app:cardElevation="2dp"
                 app:cardBackgroundColor="#ACDBF1"
+                android:tag="5"
                 android:clickable="true"
                 android:onClick="@{(v)->newIncidenceFragment.selectColor(v)}"
                 android:foreground="?android:attr/selectableItemBackground">
@@ -159,6 +164,7 @@
                 app:cardCornerRadius="2dp"
                 app:cardElevation="2dp"
                 app:cardBackgroundColor="#ACDBF1"
+                android:tag="6"
                 android:onClick="@{(v)->newIncidenceFragment.selectColor(v)}"
                 android:clickable="true">
 
@@ -182,6 +188,7 @@
                 app:cardCornerRadius="2dp"
                 app:cardElevation="2dp"
                 app:cardBackgroundColor="#ACDBF1"
+                android:tag="7"
                 android:onClick="@{(v)->newIncidenceFragment.selectColor(v)}"
                 android:clickable="true">
 
@@ -205,6 +212,7 @@
                 app:cardCornerRadius="2dp"
                 app:cardElevation="2dp"
                 app:cardBackgroundColor="#ACDBF1"
+                android:tag="8"
                 android:onClick="@{(v)->newIncidenceFragment.selectColor(v)}"
                 android:clickable="true">
 
@@ -228,6 +236,7 @@
                 app:cardCornerRadius="2dp"
                 app:cardElevation="2dp"
                 app:cardBackgroundColor="#ACDBF1"
+                android:tag="9"
                 android:onClick="@{(v)->newIncidenceFragment.selectColor(v)}"
                 android:clickable="true">
 

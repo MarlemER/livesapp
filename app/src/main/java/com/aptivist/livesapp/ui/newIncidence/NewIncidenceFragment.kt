@@ -2,68 +2,52 @@ package com.aptivist.livesapp.ui.newIncidence
 
 import android.app.*
 import android.app.Activity.RESULT_OK
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
-import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getExternalFilesDirs
 import androidx.core.content.FileProvider
 import androidx.core.view.children
 import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.airbnb.lottie.parser.IntegerParser
 
 import com.aptivist.livesapp.R
 import com.aptivist.livesapp.databinding.NewIncidenceFragmentBinding
 import com.aptivist.livesapp.di.interfaces.IMessagesDialogs
-import com.aptivist.livesapp.helpers.Constants.Companion.PICTURE_NAME
 import com.aptivist.livesapp.helpers.Constants.Companion.REQUEST_CODE_CAMERA
 import com.aptivist.livesapp.helpers.Constants.Companion.REQUEST_PERMISSION_CAMERA
+import com.aptivist.livesapp.helpers.EnumIncidenceType
+import com.aptivist.livesapp.helpers.OnBackClickListener
 import com.aptivist.livesapp.helpers.Utilities
-import com.aptivist.livesapp.ui.home.HomeFragment
-import com.aptivist.livesapp.ui.main.MainActivity
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.protobuf.compiler.PluginProtos
+import com.google.android.material.navigation.NavigationView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.new_incidence_fragment.*
-import kotlinx.android.synthetic.main.new_incidence_fragment.view.*
-import kotlinx.android.synthetic.main.picture_preview.*
 import org.koin.android.ext.android.inject
-import org.koin.android.viewmodel.compat.ScopeCompat.viewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.ext.getScopeName
-import org.koin.ext.scope
 import java.io.File
-import java.io.IOException
-import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.zip.Inflater
 import kotlin.collections.ArrayList
+import kotlin.properties.Delegates
 
 class NewIncidenceFragment : Fragment() {
 
     companion object {
         fun newInstance() = NewIncidenceFragment()
+        fun utilities() = Utilities()
     }
 
     val viewModelFragment by viewModel<NewIncidenceViewModel>()
@@ -80,7 +64,7 @@ class NewIncidenceFragment : Fragment() {
     private lateinit var url: String
     private lateinit var bitMap:Bitmap
     lateinit var navController: NavController
-
+    var itemSelected:Int = 0
     lateinit var binding: NewIncidenceFragmentBinding
 
     override fun onCreateView(
@@ -181,7 +165,7 @@ class NewIncidenceFragment : Fragment() {
         }
     }
 
-    fun createFileImage(): File {
+    private fun createFileImage(): File {
         val timeStamp =  SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val name ="JPEG_" + timeStamp + "_"
         val directory = context!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
@@ -220,7 +204,12 @@ class NewIncidenceFragment : Fragment() {
         {
             if((item as CardView).id==view.id){
                 item.setCardBackgroundColor(Color.parseColor("#44BCF4"))
-                messageUser.showToast(view.context,"Clic on${item.id}")
+                itemSelected = (item.tag.toString()).toInt()
+                //var enum = EnumIncidenceType(itemSelected)
+                /*when(itemSelected){
+                    itemSelected-> EnumIncidenceType.Accident
+                }*/
+                messageUser.showToast(view.context,"Clic on${item.tag}")
             }else{
                 item.setCardBackgroundColor(Color.parseColor("#ACDBF1"))
             }
@@ -228,7 +217,12 @@ class NewIncidenceFragment : Fragment() {
     }
 
     private fun saveNewIncidence(){
-
+        if(utilities().validationFieldsNewIncidence(itemSelected,arguments?.getDouble("longitudeLocation"),arguments?.getDouble("latitudeLocation"),txtDateTime.text.toString()))
+        {
+            messageUser.showToast(activity!!,"save the data")
+        }else{
+            messageUser.showToast(activity!!,"failed please complete the required fields")
+        }
     }
 
 

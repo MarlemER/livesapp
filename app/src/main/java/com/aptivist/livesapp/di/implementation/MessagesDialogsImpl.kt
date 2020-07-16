@@ -52,7 +52,9 @@ class MessagesDialogsImpl:IMessagesDialogs, Utilities() {
         icon: Int,
         context: Context,
         view: View,
-        messageConfirmation:String
+        messageConfirmation:String,
+        longitude:Double,
+        latitude: Double
     ) {
         AlertDialog.Builder(ContextThemeWrapper(context,R.style.AlertDialogCustom))
             .setTitle(title)
@@ -62,6 +64,8 @@ class MessagesDialogsImpl:IMessagesDialogs, Utilities() {
             ) { _, _ ->
 
                 var bundle = bundleOf("addressLocation" to messageConfirmation)
+                            bundleOf("longitudeLocation" to longitude)
+                            bundleOf("latitudeLocation" to latitude)
                 var navController: NavController = view.findNavController()
                 navController.navigate(R.id.goToIncidenceFragment, bundle)
                 showToast(context,messageConfirmation)
