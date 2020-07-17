@@ -48,6 +48,10 @@ open class Utilities {
         return c
     }
 
+    fun calendarDate():Calendar{
+        return Calendar.getInstance()
+    }
+
     private fun dateTimeFormat(calendar:Calendar?):String{
        return SimpleDateFormat("MMM dd, YYYY HH:mm a", Locale.US).format(calendar?.time).toString()
     }
