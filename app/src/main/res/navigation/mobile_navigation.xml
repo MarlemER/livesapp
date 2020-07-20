@@ -16,7 +16,9 @@
             app:destination="@id/nav_home_second" />
         <action
             android:id="@+id/goToIncidenceFragment"
-            app:destination="@id/newIncidenceFragment" />
+            app:destination="@id/newIncidenceFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/fragment_close_exit" />
     </fragment>
     <fragment
         android:id="@+id/nav_home_second"

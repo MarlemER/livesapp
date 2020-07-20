@@ -54,8 +54,8 @@ class HomeFragment : Fragment(),OnMapReadyCallback,SearchView.OnQueryTextListene
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var lastLocation: Location
     private lateinit var LatLong: LatLng
-    var flagSearchLocation:Boolean = false
-    lateinit var navController: NavController
+    private var flagSearchLocation:Boolean = false
+    private lateinit var navController: NavController
 
     override fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View? {
         homeViewModel =

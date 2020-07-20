@@ -21,6 +21,8 @@
 
         <GridLayout
             android:id="@+id/glNewIncidence"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnCount="3"
@@ -303,10 +305,10 @@
                 tools:layout_editor_absoluteY="16dp"></com.google.android.material.textview.MaterialTextView>
 
             <ImageView
+                android:id="@+id/btnOpenCamera"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/ic_picture"
-                android:id="@+id/btnOpenCamera"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"></ImageView>
@@ -351,10 +353,10 @@
 
 
             <ImageView
+                android:id="@+id/btnOpenLocation"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/ic_location"
-                android:id="@+id/btnOpenLocation"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"></ImageView>

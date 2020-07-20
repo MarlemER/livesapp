@@ -62,11 +62,25 @@
     <string name="user_register_successful">User register successful</string>
     <string name="try_again">Try again!</string>
     <string name="complete_to_continue">Complete to continue</string>
+
+    //Add new incidence
     <string name="picture">Picture....</string>
     <string name="location">Location....</string>
     <string name="date">Date....</string>
     <string name="save">Save</string>
     <string name="title_activity_maps">Map</string>
-    <string name="Location">Location...</string>
+    <string name="format_dateTime">MMM dd, YYYY HH:mm a</string>
+    <string name="label_show_preview">Show a preview</string>
+    <string name="label_no_image">No image</string>
+    <string name="var_boudle_addresslocation">addressLocation</string>
+    <string name="var_boudle_longitudelocation">longitudeLocation</string>
+    <string name="var_boudle_latitudelocation">latitudeLocation</string>
+    <string name="failed_to_savechanges">failed please complete the required fields</string>
+    <string name="Ok_button">OK</string>
+    <string name="Cancel_button">CANCEL</string>
+    <string name="fields_required">Fields required</string>
+    <string name="save_data">Save data</string>
+    <string name="confirmation_save_newincidence">Are you sure to save new incidence</string>
+
 
 </resources>
