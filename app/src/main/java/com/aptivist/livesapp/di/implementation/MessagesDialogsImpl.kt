@@ -102,4 +102,34 @@ class MessagesDialogsImpl:IMessagesDialogs, Utilities() {
         Toast.makeText(context,message,Toast.LENGTH_LONG).show()
     }
 
+    override fun showMessageTransaction(
+        title: String,
+        message: String?,
+        setTitlePositiveButton: String,
+        setTitleNegativeButton:String,
+        icon: Int,
+        context: Context,
+        view:View,
+        messageConfirmation:String
+    ) {
+        AlertDialog.Builder(ContextThemeWrapper(context,R.style.AlertDialogCustom))
+            .setTitle(title)
+            .setMessage(message)
+            .setIcon(icon)
+            .setPositiveButton(setTitlePositiveButton
+            ) { _, _ ->
+
+                var bundle = bundleOf("dataClassNewIncidence" to messageConfirmation)
+                var navController: NavController = view.findNavController()
+                navController.navigate(R.id.goToHomeMap, bundle)
+                showToast(context,messageConfirmation)
+            }
+            .setNegativeButton(setTitleNegativeButton){_,_->
+                if (message != null) {
+                    showToast(context,message)
+                }
+            }
+            .create().show()
+    }
+
 }

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -111,7 +112,7 @@ class NewIncidenceFragment : Fragment() {
                     c.set(Calendar.HOUR_OF_DAY, mHourOfDay)
                     c.set(Calendar.MINUTE, mMinute)
                     txtDateTime.text =
-                        SimpleDateFormat("MMM dd, YYYY HH:mm a", Locale.US).format(c.time)
+                        SimpleDateFormat(getString(R.string.format_dateTime), Locale.US).format(c.time)
                 },
                 c.get(Calendar.HOUR_OF_DAY),
                 c.get(Calendar.MINUTE),
@@ -127,13 +128,13 @@ class NewIncidenceFragment : Fragment() {
                 c.set(Calendar.HOUR_OF_DAY, c.get(Calendar.HOUR_OF_DAY))
                 c.set(Calendar.MINUTE, c.get(Calendar.MINUTE))
                 txtDateTime.text =
-                    SimpleDateFormat("MMM dd, YYYY HH:mm a", Locale.US).format(c.time)
+                    SimpleDateFormat(getString(R.string.format_dateTime), Locale.US).format(c.time)
             }
         }
         btnOpenCamera.setOnClickListener { requestPermissions() }
         txtPicturePreview.setOnClickListener { showPicture(uri) }
         btnOpenLocation.setOnClickListener { navController.navigate(R.id.goToHomeMap) }
-        txtLocationPreview.text = arguments?.getString("addressLocation")
+        txtLocationPreview.text = arguments?.getString(getString(R.string.var_boudle_addresslocation))
         btnSaveIncident.setOnClickListener { saveNewIncidence() }
     }
 
@@ -164,7 +165,7 @@ class NewIncidenceFragment : Fragment() {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
                     openCamera()
                 } else {
-                    context?.applicationContext?.let { messageUser.showToast(it, "Failed") }
+                    context?.applicationContext?.let { messageUser.showToast(it, resources.getString(R.string.try_again)) }
                 }
             }
         }
@@ -199,9 +200,9 @@ class NewIncidenceFragment : Fragment() {
         //super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_CAMERA && resultCode == RESULT_OK) {
             showPicture(uri)
-            txtPicturePreview.text = "Preview"
+            txtPicturePreview.text = getString(R.string.label_show_preview)
         } else {
-            txtPicturePreview.text = "No image"
+            txtPicturePreview.text = getString(R.string.label_no_image)
         }
     }
 
@@ -210,7 +211,7 @@ class NewIncidenceFragment : Fragment() {
         val mDialogView = LayoutInflater.from(context).inflate(R.layout.picture_preview, null)
         val mBuilder = AlertDialog.Builder(context)
             .setView(mDialogView)
-            .setTitle("Preview")
+            .setTitle(getString(R.string.label_show_preview))
         var img = mDialogView.findViewById<ImageView>(R.id.imgPreview)
         var f = File(uri.toString())
         if (!f.exists()) {
@@ -222,7 +223,7 @@ class NewIncidenceFragment : Fragment() {
     fun selectColor(view: View) {
         for (item in glNewIncidence.children) {
             if ((item as CardView).id == view.id) {
-                item.setCardBackgroundColor(Color.parseColor("#44BCF4"))
+                item.setCardBackgroundColor(Color.parseColor(resources.getString(R.color.select_newIncidence!!)))
                 itemSelected = (item.tag.toString()).toInt()
                 //var enum = EnumIncidenceType(itemSelected)
                 /*when(itemSelected){
@@ -230,7 +231,7 @@ class NewIncidenceFragment : Fragment() {
                 }*/
                 messageUser.showToast(view.context, "Clic on${item.tag}")
             } else {
-                item.setCardBackgroundColor(Color.parseColor("#ACDBF1"))
+                item.setCardBackgroundColor(Color.parseColor(resources.getString(R.color.deselect_newIncidence!!)))
             }
         }
     }
@@ -238,16 +239,27 @@ class NewIncidenceFragment : Fragment() {
     private fun saveNewIncidence() {
         if (utilities().validationFieldsNewIncidence(
                 itemSelected,
-                arguments?.getDouble("longitudeLocation"),
-                arguments?.getDouble("latitudeLocation"),
+                arguments?.getDouble(resources.getString(R.string.var_boudle_longitudelocation)),
+                arguments?.getDouble(resources.getString(R.string.var_boudle_latitudelocation)),
                 txtDateTime.text.toString()
             )
         ) {
-            messageUser.showToast(activity!!, "save the data")
+            messageUser.showMessageTransaction(getString(R.string.save_data),getString(R.string.confirmation_save_newincidence),resources.getString(R.string.Ok_button),resources.getString(R.string.Cancel_button),R.drawable.ic_error,activity!!,view!!,"Data save successful")
         } else {
-            messageUser.showToast(activity!!, "failed please complete the required fields")
+            if(itemSelected==0){
+                glNewIncidence.setBackgroundColor(Color.parseColor("#E68888"))
+            }
+            if(txtLocationPreview.text.isNullOrEmpty()){
+                btnOpenLocation.setBackgroundColor(Color.parseColor("#E68888"))
+            }
+            if(txtDateTime.text.isNullOrEmpty()){
+                btnOpenDate.setBackgroundColor(Color.parseColor("#E68888"))
+            }
+            messageUser.showMessageOneOption(getString(R.string.fields_required),resources.getString(R.string.failed_to_savechanges),resources.getString(R.string.Ok_button),R.drawable.ic_error,activity!!)
         }
     }
+
+
 
 
 }
