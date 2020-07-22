@@ -10,6 +10,9 @@
         <variable
             name="newIncidenceFragment"
             type="com.aptivist.livesapp.ui.newIncidence.NewIncidenceFragment" />
+        <variable
+            name="view"
+            type="com.aptivist.livesapp.BaseActivity" />
     </data>
 
     <LinearLayout
@@ -429,6 +432,7 @@
                 app:cornerRadius="1sp"
                 app:icon="@drawable/ic_next"
                 app:iconGravity="end"
+                android:onClick="@{()->view.pictureImageFromGallery()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"></com.google.android.material.button.MaterialButton>

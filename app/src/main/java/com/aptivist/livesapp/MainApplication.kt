@@ -3,12 +3,15 @@ package com.aptivist.livesapp
 import android.app.Application
 import com.aptivist.livesapp.di.implementation.FirebaseImpl
 import com.aptivist.livesapp.di.implementation.MessagesDialogsImpl
-import com.aptivist.livesapp.di.implementation.SharePreferencesImpl
+import com.aptivist.livesapp.di.implementation.UploadImageImpl
 import com.aptivist.livesapp.di.implementation.UserSessionImpl
 import com.aptivist.livesapp.di.interfaces.IFirebaseInstance
 import com.aptivist.livesapp.di.interfaces.IMessagesDialogs
 import com.aptivist.livesapp.di.interfaces.ISessionSignin
+import com.aptivist.livesapp.di.interfaces.IUploadImageService
+import com.aptivist.livesapp.helpers.Utilities
 import com.aptivist.livesapp.ui.newIncidence.NewIncidenceViewModel
+import com.google.firebase.storage.FirebaseStorage
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.android.viewmodel.dsl.viewModel
@@ -26,9 +29,8 @@ class MainApplication:Application() {
     }
 
     private val singletonModule = module {
-        single {
-            //FirebaseAuth.getInstance()
-        }
+        single{ FirebaseStorage.getInstance().reference }
+        single { Utilities() }
     }
 
     private val implementationModule = module {
@@ -36,10 +38,11 @@ class MainApplication:Application() {
         factory<IFirebaseInstance> { FirebaseImpl() }
         factory<ISessionSignin> { UserSessionImpl() }
         factory<IMessagesDialogs> { MessagesDialogsImpl() }
+        factory<IUploadImageService> { UploadImageImpl(get()) }
     }
 
     private val viewModelModule = module {
        // viewModel { SigninViewModel() }
-        viewModel { NewIncidenceViewModel() }
+        viewModel { NewIncidenceViewModel(get()) }
     }
 }

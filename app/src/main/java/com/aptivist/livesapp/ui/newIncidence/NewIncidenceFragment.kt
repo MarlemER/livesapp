@@ -18,42 +18,39 @@ import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.children
-import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import com.airbnb.lottie.parser.IntegerParser
+import com.aptivist.livesapp.BaseActivity
+import com.aptivist.livesapp.BaseFragment
 
 import com.aptivist.livesapp.R
 import com.aptivist.livesapp.databinding.NewIncidenceFragmentBinding
 import com.aptivist.livesapp.di.interfaces.IMessagesDialogs
 import com.aptivist.livesapp.helpers.Constants.Companion.REQUEST_CODE_CAMERA
 import com.aptivist.livesapp.helpers.Constants.Companion.REQUEST_PERMISSION_CAMERA
-import com.aptivist.livesapp.helpers.EnumIncidenceType
-import com.aptivist.livesapp.helpers.OnBackClickListener
+import com.aptivist.livesapp.helpers.Constants.Companion.UPLOAD_IMAGE_INCIDENCE
 import com.aptivist.livesapp.helpers.Utilities
-import com.google.android.material.navigation.NavigationView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.new_incidence_fragment.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
-import org.koin.ext.getScopeName
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Singleton
 import kotlin.collections.ArrayList
-import kotlin.properties.Delegates
 
-class NewIncidenceFragment : Fragment() {
-
+class NewIncidenceFragment : BaseFragment() {
+/*
     companion object {
-        fun newInstance() = NewIncidenceFragment()
+       // fun newInstance() = NewIncidenceFragment()
         fun utilities() = Utilities()
     }
-
+*/
     val viewModelFragment by viewModel<NewIncidenceViewModel>()
-    var utilities: Utilities? = null
     private val messageUser: IMessagesDialogs by inject()
+    private val utilities:Utilities by inject()
     lateinit var photoFile: File
     var currentItemSelect: CardView? = null
     var arrayCardView: ArrayList<CardView>? = null
@@ -68,6 +65,7 @@ class NewIncidenceFragment : Fragment() {
     var itemSelected: Int = 0
     lateinit var binding: NewIncidenceFragmentBinding
     var isBack:Boolean = false
+    private val  imageUploadViewModel: NewIncidenceViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,6 +77,10 @@ class NewIncidenceFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.newIncidenceFragment = this
         binding.newIncidenceViewModel = viewModelFragment
+
+       /* val binding1 = DataBindingUtil.setContentView<NewIncidenceFragmentBinding>(activity!!,R.id.newIncidenceFragment)
+        binding1.lifecycleOwner = this
+        binding1.newIncidenceViewModel = imageUploadViewModel*/
 
         return binding.root
     }
@@ -198,11 +200,34 @@ class NewIncidenceFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         //super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_CAMERA && resultCode == RESULT_OK) {
+       /* if (requestCode == REQUEST_CODE_CAMERA && resultCode == RESULT_OK) {
             showPicture(uri)
             txtPicturePreview.text = getString(R.string.label_show_preview)
         } else {
             txtPicturePreview.text = getString(R.string.label_no_image)
+        }*/
+        when(requestCode){
+            REQUEST_CODE_CAMERA ->
+                if(resultCode == RESULT_OK){
+                    showPicture(uri)
+                    txtPicturePreview.text = getString(R.string.label_show_preview)
+                }else{
+                    txtPicturePreview.text = getString(R.string.label_no_image)
+                }
+            UPLOAD_IMAGE_INCIDENCE ->
+                if(resultCode == RESULT_OK)
+                {
+                    if(data?.data != null){
+                        imageUploadViewModel.uploadImage(data.data!!)
+                    }else{
+                        messageUser.showToast(activity!!,"Error get data")
+                    }
+
+                }else{
+                    messageUser.showToast(activity!!,"Error")
+                }
+
+
         }
     }
 
@@ -236,8 +261,10 @@ class NewIncidenceFragment : Fragment() {
         }
     }
 
+
+
     private fun saveNewIncidence() {
-        if (utilities().validationFieldsNewIncidence(
+        if (utilities.validationFieldsNewIncidence(
                 itemSelected,
                 arguments?.getDouble(resources.getString(R.string.var_boudle_longitudelocation)),
                 arguments?.getDouble(resources.getString(R.string.var_boudle_latitudelocation)),
@@ -258,8 +285,6 @@ class NewIncidenceFragment : Fragment() {
             messageUser.showMessageOneOption(getString(R.string.fields_required),resources.getString(R.string.failed_to_savechanges),resources.getString(R.string.Ok_button),R.drawable.ic_error,activity!!)
         }
     }
-
-
 
 
 }
