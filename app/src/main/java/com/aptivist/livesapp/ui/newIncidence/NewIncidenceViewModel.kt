@@ -12,7 +12,7 @@ class NewIncidenceViewModel(private val dataService:IUploadDataService) : BaseVi
     private val saveImage = MutableLiveData<String>()
     private val saveNewIncidence = MutableLiveData<Boolean>()
     private val dataIncidence = MutableLiveData<IncidenceData>()
-    val isProgress:MutableLiveData<Boolean>? = MutableLiveData<Boolean>()
+    val progressVisible:MutableLiveData<Boolean>? = MutableLiveData<Boolean>()
 
     fun uploadImage(uri: Uri):String?{
        saveImage.value = dataService.uploadImage(uri)
@@ -26,7 +26,7 @@ class NewIncidenceViewModel(private val dataService:IUploadDataService) : BaseVi
         }
     }
     fun saveDBnewInicidence(newIncidence:IncidenceData):Boolean{
-        isProgress?.value = true
+        progressVisible?.value = true
         var isSuccess:Boolean = false
         try {
            isSuccess = dataService.uploadData(newIncidence)
@@ -35,7 +35,7 @@ class NewIncidenceViewModel(private val dataService:IUploadDataService) : BaseVi
             ex.printStackTrace()
         }
         finally {
-            isProgress?.value = false
+            progressVisible?.value = false
         }
         return isSuccess
     }

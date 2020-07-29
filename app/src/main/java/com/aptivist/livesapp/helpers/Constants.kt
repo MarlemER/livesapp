@@ -18,5 +18,7 @@ class Constants {
         val AUTOCOMPLETE_REQUEST_CODE = 1
         val UPLOAD_IMAGE_INCIDENCE = 1
         val INCIDENCE_ENTITY_DB = "Incidence"
+        val WIDTH_PICTURE_NEW_INCIDENCE = 800
+        val HEIGHT_PICTURE_NEW_INCIDENCE = 1500
     }
 }

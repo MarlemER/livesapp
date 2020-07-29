@@ -12,6 +12,7 @@ import com.aptivist.livesapp.di.interfaces.IUploadDataService
 import com.aptivist.livesapp.helpers.Utilities
 import com.aptivist.livesapp.ui.newIncidence.NewIncidenceViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -33,6 +34,7 @@ class MainApplication:Application() {
         single { FirebaseAuth.getInstance() }
         single{ FirebaseStorage.getInstance().reference }
         single { Utilities() }
+        single { FirebaseDatabase.getInstance().reference }
     }
 
     private val implementationModule = module {
@@ -40,7 +42,7 @@ class MainApplication:Application() {
         factory<IFirebaseInstance> { FirebaseImpl() }
         factory<ISessionSignin> { UserSessionImpl() }
         factory<IMessagesDialogs> { MessagesDialogsImpl() }
-        factory<IUploadDataService> { UploadIncidenceImpl(get()) }
+        factory<IUploadDataService> { UploadIncidenceImpl(get(),get()) }
     }
 
     private val viewModelModule = module {

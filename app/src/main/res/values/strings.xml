@@ -80,7 +80,11 @@
     <string name="Cancel_button">CANCEL</string>
     <string name="fields_required">Fields required</string>
     <string name="save_data">Save data</string>
+    <string name="save__button_successful">Save successful!</string>
     <string name="confirmation_save_newincidence">Are you sure to save new incidence</string>
+    <string name="error_upload_image">Error get Image try again</string>
+    <string name="cancel_button">Cancel for the user</string>
+    <string name="transation_cancel">Transaction is cancel!</string>
 
 
 </resources>

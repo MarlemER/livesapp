@@ -11,10 +11,12 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import org.koin.android.ext.android.inject
+import org.koin.java.KoinJavaComponent.inject
 import java.lang.Exception
 import java.util.*
 
-class UploadIncidenceImpl(private val mStorageReference: StorageReference):IUploadDataService {
+class UploadIncidenceImpl(private val mStorageReference: StorageReference, private val dbReference: DatabaseReference):IUploadDataService {
     override fun uploadImage(uri: Uri): String? {
         val imgReference = mStorageReference.child("images/${UUID.randomUUID()}")
         val downloadURL = runBlocking(Dispatchers.IO) {
@@ -30,7 +32,8 @@ class UploadIncidenceImpl(private val mStorageReference: StorageReference):IUplo
     }
 
     override fun uploadData(newIncidenceData: IncidenceData): Boolean {
-        var database=FirebaseDatabase.getInstance().reference
+       // var database=FirebaseDatabase.getInstance().reference
+        val database = dbReference
         var insertIncidence:Boolean = false
         //var reference: DatabaseReference = database.getReference("server/saving-data/fireblog")
         //val reference:DatabaseReference = database.reference.child("Incidence")

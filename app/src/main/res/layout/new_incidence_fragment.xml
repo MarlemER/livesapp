@@ -408,6 +408,19 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"></ImageView>
+
+            <androidx.core.widget.ContentLoadingProgressBar
+                android:id="@+id/pbNewIncidence"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:visible="@{newIncidenceViewModel.progressVisible}" >
+
+            </androidx.core.widget.ContentLoadingProgressBar>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View

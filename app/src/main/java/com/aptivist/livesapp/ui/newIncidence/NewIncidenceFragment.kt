@@ -24,10 +24,13 @@ import com.aptivist.livesapp.BaseFragment
 import com.aptivist.livesapp.R
 import com.aptivist.livesapp.databinding.NewIncidenceFragmentBinding
 import com.aptivist.livesapp.di.implementation.MessagesDialogsImpl
+import com.aptivist.livesapp.di.interfaces.IFirebaseInstance
 import com.aptivist.livesapp.di.interfaces.IMessagesDialogs
+import com.aptivist.livesapp.helpers.Constants.Companion.HEIGHT_PICTURE_NEW_INCIDENCE
 import com.aptivist.livesapp.helpers.Constants.Companion.REQUEST_CODE_CAMERA
 import com.aptivist.livesapp.helpers.Constants.Companion.REQUEST_PERMISSION_CAMERA
 import com.aptivist.livesapp.helpers.Constants.Companion.UPLOAD_IMAGE_INCIDENCE
+import com.aptivist.livesapp.helpers.Constants.Companion.WIDTH_PICTURE_NEW_INCIDENCE
 import com.aptivist.livesapp.helpers.EnumIncidenceType
 import com.aptivist.livesapp.helpers.EnumUser
 import com.aptivist.livesapp.helpers.Utilities
@@ -54,21 +57,18 @@ class NewIncidenceFragment : BaseFragment(),MessagesDialogsImpl.OnContinueCancel
     val viewModelFragment by viewModel<NewIncidenceViewModel>()
     private val messageUser: IMessagesDialogs by inject()
     private val utilities: Utilities by inject()
-    lateinit var photoFile: File
-    var currentItemSelect: CardView? = null
-    var arrayCardView: ArrayList<CardView>? = null
-    lateinit var currentPhotoPath: String
+    val entitiesFirebase: IFirebaseInstance by inject()
     private lateinit var uri: Uri
     val permissionCamera = android.Manifest.permission.CAMERA
     val writeStorage = android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     val readStorage = android.Manifest.permission.READ_EXTERNAL_STORAGE
     private lateinit var url: String
-    private lateinit var bitMap: Bitmap
     lateinit var navController: NavController
     var itemSelected: Int = 0
     var itemSelectedName:String=""
     lateinit var binding: NewIncidenceFragmentBinding
-    var isBack: Boolean = false
+    var longitude = arguments?.getDouble("longitudeLocation")
+    var latitude = arguments?.getDouble("latitudeLocation")
     private val incidenceViewModel: NewIncidenceViewModel by viewModel()
 
     override fun onCreateView(
@@ -143,7 +143,7 @@ class NewIncidenceFragment : BaseFragment(),MessagesDialogsImpl.OnContinueCancel
         txtPicturePreview.setOnClickListener { showPicture(uri) }
         btnOpenLocation.setOnClickListener { navController.navigate(R.id.goToHomeMap) }
         txtLocationPreview.text = arguments?.getString(getString(R.string.var_boudle_addresslocation))
-        btnSaveIncidentData.setOnClickListener { saveNewIncidence() }
+        btnSaveIncidentData.setOnClickListener { confirmNewIncidence() }
 
     }
 
@@ -230,11 +230,10 @@ class NewIncidenceFragment : BaseFragment(),MessagesDialogsImpl.OnContinueCancel
                     if (data?.data != null) {
                         incidenceViewModel.uploadImage(data.data!!)
                     } else {
-                        messageUser.showToast(activity!!, "Error get data")
+                        messageUser.showToast(activity!!, resources.getString(R.string.error_upload_image))
                     }
-
                 } else {
-                    messageUser.showToast(activity!!, "Error")
+                    messageUser.showToast(activity!!, resources.getString(R.string.error))
                 }
         }
     }
@@ -248,7 +247,7 @@ class NewIncidenceFragment : BaseFragment(),MessagesDialogsImpl.OnContinueCancel
         var img = mDialogView.findViewById<ImageView>(R.id.imgPreview)
         var f = File(uri.toString())
         if (!f.exists()) {
-            Picasso.get().load(uri).resize(800, 1500).centerCrop().into(img)
+            Picasso.get().load(uri).resize(WIDTH_PICTURE_NEW_INCIDENCE, HEIGHT_PICTURE_NEW_INCIDENCE).centerCrop().into(img)
         }
         mBuilder.show()
     }
@@ -267,27 +266,12 @@ class NewIncidenceFragment : BaseFragment(),MessagesDialogsImpl.OnContinueCancel
         }
     }
 
-    private fun saveNewIncidence() {
-        var longitude = arguments?.getDouble("longitudeLocation")
-        var latitude = arguments?.getDouble("latitudeLocation")
+    private fun confirmNewIncidence() {
+        longitude = arguments?.getDouble(resources.getString(R.string.var_boudle_longitudelocation))
+        latitude = arguments?.getDouble(resources.getString(R.string.var_boudle_latitudelocation))
         if (utilities.validationFieldsNewIncidence(itemSelected,longitude as Double,latitude as Double,txtDateTime.text.toString() )) {
-           var confirmationSaveData = messageUser.showMessageTransaction( getString(R.string.save_data),getString(R.string.confirmation_save_newincidence),resources.getString(R.string.Ok_button),resources.getString(R.string.Cancel_button),
-                R.drawable.ic_error, activity!!, view!!,"Save successful","Cancel for the user")
-            if(confirmationSaveData){
-                var currentUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-                var urlImage = incidenceViewModel.uploadImage(uri)
-                var incidence=IncidenceData(itemSelected,itemSelectedName,urlImage,longitude,latitude,txtDateTime.text.toString(),currentUser?.uid)
-                var saveSuccessfull:Boolean = incidenceViewModel.saveDBnewInicidence(incidence)
-                if(saveSuccessfull){
-                    messageUser.showToast(activity!!,"Save successful!")
-                }else{
-                    messageUser.showToast(activity!!,"Transaction is cancel@!")
-                }
-            }
-            /*else{
-                messageUser.showToast(activity!!,"Is cancel the transaction")
-            }*/
-
+           messageUser.showMessageTransaction( getString(R.string.save_data),getString(R.string.confirmation_save_newincidence),resources.getString(R.string.Ok_button),resources.getString(R.string.Cancel_button),
+                R.drawable.ic_error, activity!!, view!!,resources.getString(R.string.save__button_successful),resources.getString(R.string.cancel_button),this)
         } else {
             if (itemSelected == 0) {
                 glNewIncidence.setBackgroundColor(Color.parseColor("#E68888"))
@@ -302,13 +286,24 @@ class NewIncidenceFragment : BaseFragment(),MessagesDialogsImpl.OnContinueCancel
         }
     }
 
+    private fun saveNewIncidence(){
+        var currentUser = entitiesFirebase.getFirebaseAuth().currentUser
+        //var currentUser = FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        var urlImage = incidenceViewModel.uploadImage(uri)
+        var incidence=IncidenceData(itemSelected,itemSelectedName,urlImage,longitude,latitude,txtDateTime.text.toString(),currentUser?.uid)
+        var saveSuccessfull:Boolean = incidenceViewModel.saveDBnewInicidence(incidence)
+        if(saveSuccessfull){
+            messageUser.showToast(activity!!,resources.getString(R.string.save__button_successful))
+        }else{
+            messageUser.showToast(activity!!,resources.getString(R.string.transation_cancel))
+        }
+    }
+
     override fun onPositiveClick() {
         saveNewIncidence()
     }
-
     override fun onCancelClick() {
         messageUser.showToast(activity!!,"Cancel")
     }
-
 
 }

@@ -17,6 +17,7 @@ import com.aptivist.livesapp.di.interfaces.IMessagesDialogs
 import com.aptivist.livesapp.helpers.Utilities
 
 class MessagesDialogsImpl:IMessagesDialogs, Utilities() {
+    internal lateinit var listener: OnContinueCancelClickListener
     override fun showSuccessful(title: String, message: String, icon: Drawable, context: Context) {
         AlertDialog.Builder(context)
             .setTitle(title)
@@ -117,8 +118,9 @@ class MessagesDialogsImpl:IMessagesDialogs, Utilities() {
         context: Context,
         view:View,
         messageConfirmation:String,
-        messageCancel:String
-    ):Boolean {
+        messageCancel:String,
+        listener: OnContinueCancelClickListener
+    ) {
         var confirmTransaction = false
         AlertDialog.Builder(ContextThemeWrapper(context,R.style.AlertDialogCustom))
             .setTitle(title)
@@ -129,16 +131,15 @@ class MessagesDialogsImpl:IMessagesDialogs, Utilities() {
                 var navController: NavController = view.findNavController()
                 navController.navigate(R.id.goToHomeMap, bundle)
                 showToast(context,messageConfirmation)
-                confirmTransaction = true
+                listener.onPositiveClick()
             })
             .setNegativeButton(setTitleNegativeButton){ dialog:DialogInterface, _i:Int ->
                 if (message != null) {
                     showToast(context,messageCancel)
-                    confirmTransaction = false
+                    listener.onCancelClick()
                 }
             }
             .create().show()
-        return confirmTransaction
     }
 
 }
