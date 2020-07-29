@@ -1,12 +1,15 @@
 package com.aptivist.livesapp.di.implementation
 
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.drawable.Drawable
 import android.view.ContextThemeWrapper
 import android.view.View
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.fragment.app.DialogFragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.aptivist.livesapp.R
@@ -63,9 +66,7 @@ class MessagesDialogsImpl:IMessagesDialogs, Utilities() {
             .setPositiveButton(setTitlePositiveButton
             ) { _, _ ->
 
-                var bundle = bundleOf("addressLocation" to messageConfirmation)
-                            bundleOf("longitudeLocation" to longitude)
-                            bundleOf("latitudeLocation" to latitude)
+                var bundle = bundleOf("addressLocation" to messageConfirmation,"longitudeLocation" to longitude, "latitudeLocation" to latitude)
                 var navController: NavController = view.findNavController()
                 navController.navigate(R.id.goToIncidenceFragment, bundle)
                 showToast(context,messageConfirmation)
@@ -99,7 +100,12 @@ class MessagesDialogsImpl:IMessagesDialogs, Utilities() {
     }
 
     override fun showToast(context: Context,message: String) {
-        Toast.makeText(context,message,Toast.LENGTH_LONG).show()
+        Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
+    }
+
+    interface OnContinueCancelClickListener {
+        fun onPositiveClick()
+        fun onCancelClick()
     }
 
     override fun showMessageTransaction(
@@ -110,26 +116,29 @@ class MessagesDialogsImpl:IMessagesDialogs, Utilities() {
         icon: Int,
         context: Context,
         view:View,
-        messageConfirmation:String
-    ) {
+        messageConfirmation:String,
+        messageCancel:String
+    ):Boolean {
+        var confirmTransaction = false
         AlertDialog.Builder(ContextThemeWrapper(context,R.style.AlertDialogCustom))
             .setTitle(title)
             .setMessage(message)
             .setIcon(icon)
-            .setPositiveButton(setTitlePositiveButton
-            ) { _, _ ->
-
+            .setPositiveButton(setTitlePositiveButton,DialogInterface.OnClickListener { dialog, which ->  // sign in the user ...
                 var bundle = bundleOf("dataClassNewIncidence" to messageConfirmation)
                 var navController: NavController = view.findNavController()
                 navController.navigate(R.id.goToHomeMap, bundle)
                 showToast(context,messageConfirmation)
-            }
-            .setNegativeButton(setTitleNegativeButton){_,_->
+                confirmTransaction = true
+            })
+            .setNegativeButton(setTitleNegativeButton){ dialog:DialogInterface, _i:Int ->
                 if (message != null) {
-                    showToast(context,message)
+                    showToast(context,messageCancel)
+                    confirmTransaction = false
                 }
             }
             .create().show()
+        return confirmTransaction
     }
 
 }

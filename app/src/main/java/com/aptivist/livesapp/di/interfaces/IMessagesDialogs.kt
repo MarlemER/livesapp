@@ -14,5 +14,5 @@ interface IMessagesDialogs {
     fun showMessageLocationGM(title:String,message:String?,setTitlePositiveButton:String,icon:Int,context: Context,view: View, messageConfirmation:String, longitudeLocation:Double, latitudeLocation:Double)
     fun showMessagePreview(title:String,message: String?,context: Context)
     fun showToast(context: Context,message: String)
-    fun showMessageTransaction(title:String,message:String?,setTitlePositiveButton:String,setTitleNegativeButton:String,icon:Int,context: Context,view:View,messageConfirmation:String)
+    fun showMessageTransaction(title:String,message:String?,setTitlePositiveButton:String,setTitleNegativeButton:String,icon:Int,context: Context,view:View,messageConfirmation:String,messageCancel:String):Boolean
 }

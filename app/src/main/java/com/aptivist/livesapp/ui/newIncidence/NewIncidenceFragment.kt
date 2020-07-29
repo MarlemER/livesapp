@@ -6,13 +6,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.view.*
-import androidx.fragment.app.Fragment
 import android.widget.ImageView
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
@@ -21,16 +19,22 @@ import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import com.aptivist.livesapp.BaseActivity
 import com.aptivist.livesapp.BaseFragment
 
 import com.aptivist.livesapp.R
 import com.aptivist.livesapp.databinding.NewIncidenceFragmentBinding
+import com.aptivist.livesapp.di.implementation.MessagesDialogsImpl
 import com.aptivist.livesapp.di.interfaces.IMessagesDialogs
 import com.aptivist.livesapp.helpers.Constants.Companion.REQUEST_CODE_CAMERA
 import com.aptivist.livesapp.helpers.Constants.Companion.REQUEST_PERMISSION_CAMERA
 import com.aptivist.livesapp.helpers.Constants.Companion.UPLOAD_IMAGE_INCIDENCE
+import com.aptivist.livesapp.helpers.EnumIncidenceType
+import com.aptivist.livesapp.helpers.EnumUser
 import com.aptivist.livesapp.helpers.Utilities
+import com.aptivist.livesapp.model.IncidenceData
+import com.aptivist.livesapp.model.UserData
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.new_incidence_fragment.*
 import org.koin.android.ext.android.inject
@@ -38,19 +42,18 @@ import org.koin.android.viewmodel.ext.android.viewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Singleton
 import kotlin.collections.ArrayList
 
-class NewIncidenceFragment : BaseFragment() {
-/*
-    companion object {
-       // fun newInstance() = NewIncidenceFragment()
-        fun utilities() = Utilities()
-    }
-*/
+class NewIncidenceFragment : BaseFragment(),MessagesDialogsImpl.OnContinueCancelClickListener {
+    /*
+        companion object {
+           // fun newInstance() = NewIncidenceFragment()
+            fun utilities() = Utilities()
+        }
+    */
     val viewModelFragment by viewModel<NewIncidenceViewModel>()
     private val messageUser: IMessagesDialogs by inject()
-    private val utilities:Utilities by inject()
+    private val utilities: Utilities by inject()
     lateinit var photoFile: File
     var currentItemSelect: CardView? = null
     var arrayCardView: ArrayList<CardView>? = null
@@ -63,9 +66,10 @@ class NewIncidenceFragment : BaseFragment() {
     private lateinit var bitMap: Bitmap
     lateinit var navController: NavController
     var itemSelected: Int = 0
+    var itemSelectedName:String=""
     lateinit var binding: NewIncidenceFragmentBinding
-    var isBack:Boolean = false
-    private val  imageUploadViewModel: NewIncidenceViewModel by viewModel()
+    var isBack: Boolean = false
+    private val incidenceViewModel: NewIncidenceViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -78,10 +82,9 @@ class NewIncidenceFragment : BaseFragment() {
         binding.newIncidenceFragment = this
         binding.newIncidenceViewModel = viewModelFragment
 
-       /* val binding1 = DataBindingUtil.setContentView<NewIncidenceFragmentBinding>(activity!!,R.id.newIncidenceFragment)
-        binding1.lifecycleOwner = this
-        binding1.newIncidenceViewModel = imageUploadViewModel*/
-
+        /* val binding1 = DataBindingUtil.setContentView<NewIncidenceFragmentBinding>(activity!!,R.id.newIncidenceFragment)
+         binding1.lifecycleOwner = this
+         binding1.newIncidenceViewModel = imageUploadViewModel*/
         return binding.root
     }
 
@@ -114,7 +117,10 @@ class NewIncidenceFragment : BaseFragment() {
                     c.set(Calendar.HOUR_OF_DAY, mHourOfDay)
                     c.set(Calendar.MINUTE, mMinute)
                     txtDateTime.text =
-                        SimpleDateFormat(getString(R.string.format_dateTime), Locale.US).format(c.time)
+                        SimpleDateFormat(
+                            getString(R.string.format_dateTime),
+                            Locale.US
+                        ).format(c.time)
                 },
                 c.get(Calendar.HOUR_OF_DAY),
                 c.get(Calendar.MINUTE),
@@ -137,9 +143,9 @@ class NewIncidenceFragment : BaseFragment() {
         txtPicturePreview.setOnClickListener { showPicture(uri) }
         btnOpenLocation.setOnClickListener { navController.navigate(R.id.goToHomeMap) }
         txtLocationPreview.text = arguments?.getString(getString(R.string.var_boudle_addresslocation))
-        btnSaveIncident.setOnClickListener { saveNewIncidence() }
-    }
+        btnSaveIncidentData.setOnClickListener { saveNewIncidence() }
 
+    }
 
     private fun requestPermissions() {
         var isRequired =
@@ -167,7 +173,12 @@ class NewIncidenceFragment : BaseFragment() {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
                     openCamera()
                 } else {
-                    context?.applicationContext?.let { messageUser.showToast(it, resources.getString(R.string.try_again)) }
+                    context?.applicationContext?.let {
+                        messageUser.showToast(
+                            it,
+                            resources.getString(R.string.try_again)
+                        )
+                    }
                 }
             }
         }
@@ -200,34 +211,31 @@ class NewIncidenceFragment : BaseFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         //super.onActivityResult(requestCode, resultCode, data)
-       /* if (requestCode == REQUEST_CODE_CAMERA && resultCode == RESULT_OK) {
-            showPicture(uri)
-            txtPicturePreview.text = getString(R.string.label_show_preview)
-        } else {
-            txtPicturePreview.text = getString(R.string.label_no_image)
-        }*/
-        when(requestCode){
+        /* if (requestCode == REQUEST_CODE_CAMERA && resultCode == RESULT_OK) {
+             showPicture(uri)
+             txtPicturePreview.text = getString(R.string.label_show_preview)
+         } else {
+             txtPicturePreview.text = getString(R.string.label_no_image)
+         }*/
+        when (requestCode) {
             REQUEST_CODE_CAMERA ->
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     showPicture(uri)
                     txtPicturePreview.text = getString(R.string.label_show_preview)
-                }else{
+                } else {
                     txtPicturePreview.text = getString(R.string.label_no_image)
                 }
             UPLOAD_IMAGE_INCIDENCE ->
-                if(resultCode == RESULT_OK)
-                {
-                    if(data?.data != null){
-                        imageUploadViewModel.uploadImage(data.data!!)
-                    }else{
-                        messageUser.showToast(activity!!,"Error get data")
+                if (resultCode == RESULT_OK) {
+                    if (data?.data != null) {
+                        incidenceViewModel.uploadImage(data.data!!)
+                    } else {
+                        messageUser.showToast(activity!!, "Error get data")
                     }
 
-                }else{
-                    messageUser.showToast(activity!!,"Error")
+                } else {
+                    messageUser.showToast(activity!!, "Error")
                 }
-
-
         }
     }
 
@@ -250,40 +258,56 @@ class NewIncidenceFragment : BaseFragment() {
             if ((item as CardView).id == view.id) {
                 item.setCardBackgroundColor(Color.parseColor(resources.getString(R.color.select_newIncidence!!)))
                 itemSelected = (item.tag.toString()).toInt()
-                //var enum = EnumIncidenceType(itemSelected)
-                /*when(itemSelected){
-                    itemSelected-> EnumIncidenceType.Accident
-                }*/
-                messageUser.showToast(view.context, "Clic on${item.tag}")
+                //itemSelectedName = utilities.convertEnumIncidence(itemSelected)
+                itemSelectedName = utilities.convertEnumIncidenceName(itemSelected)
+                messageUser.showToast(view.context, "Clic on ${itemSelectedName}")
             } else {
                 item.setCardBackgroundColor(Color.parseColor(resources.getString(R.color.deselect_newIncidence!!)))
             }
         }
     }
 
-
-
     private fun saveNewIncidence() {
-        if (utilities.validationFieldsNewIncidence(
-                itemSelected,
-                arguments?.getDouble(resources.getString(R.string.var_boudle_longitudelocation)),
-                arguments?.getDouble(resources.getString(R.string.var_boudle_latitudelocation)),
-                txtDateTime.text.toString()
-            )
-        ) {
-            messageUser.showMessageTransaction(getString(R.string.save_data),getString(R.string.confirmation_save_newincidence),resources.getString(R.string.Ok_button),resources.getString(R.string.Cancel_button),R.drawable.ic_error,activity!!,view!!,"Data save successful")
+        var longitude = arguments?.getDouble("longitudeLocation")
+        var latitude = arguments?.getDouble("latitudeLocation")
+        if (utilities.validationFieldsNewIncidence(itemSelected,longitude as Double,latitude as Double,txtDateTime.text.toString() )) {
+           var confirmationSaveData = messageUser.showMessageTransaction( getString(R.string.save_data),getString(R.string.confirmation_save_newincidence),resources.getString(R.string.Ok_button),resources.getString(R.string.Cancel_button),
+                R.drawable.ic_error, activity!!, view!!,"Save successful","Cancel for the user")
+            if(confirmationSaveData){
+                var currentUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+                var urlImage = incidenceViewModel.uploadImage(uri)
+                var incidence=IncidenceData(itemSelected,itemSelectedName,urlImage,longitude,latitude,txtDateTime.text.toString(),currentUser?.uid)
+                var saveSuccessfull:Boolean = incidenceViewModel.saveDBnewInicidence(incidence)
+                if(saveSuccessfull){
+                    messageUser.showToast(activity!!,"Save successful!")
+                }else{
+                    messageUser.showToast(activity!!,"Transaction is cancel@!")
+                }
+            }
+            /*else{
+                messageUser.showToast(activity!!,"Is cancel the transaction")
+            }*/
+
         } else {
-            if(itemSelected==0){
+            if (itemSelected == 0) {
                 glNewIncidence.setBackgroundColor(Color.parseColor("#E68888"))
             }
-            if(txtLocationPreview.text.isNullOrEmpty()){
+            if (txtLocationPreview.text.isNullOrEmpty()) {
                 btnOpenLocation.setBackgroundColor(Color.parseColor("#E68888"))
             }
-            if(txtDateTime.text.isNullOrEmpty()){
+            if (txtDateTime.text.isNullOrEmpty()) {
                 btnOpenDate.setBackgroundColor(Color.parseColor("#E68888"))
             }
-            messageUser.showMessageOneOption(getString(R.string.fields_required),resources.getString(R.string.failed_to_savechanges),resources.getString(R.string.Ok_button),R.drawable.ic_error,activity!!)
+            messageUser.showMessageOneOption( getString(R.string.fields_required),resources.getString(R.string.failed_to_savechanges), resources.getString(R.string.Ok_button),R.drawable.ic_error, activity!!)
         }
+    }
+
+    override fun onPositiveClick() {
+        saveNewIncidence()
+    }
+
+    override fun onCancelClick() {
+        messageUser.showToast(activity!!,"Cancel")
     }
 
 

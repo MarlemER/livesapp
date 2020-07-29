@@ -55,6 +55,7 @@ ext {
     firebaseAuth_version = "19.3.1"
     firebaseCore_version = "16.0.3"
     firebaseDB_version = "19.1.0"
+    firebaseStorage_version = "19.1.0"
     dagger_version = "2.27"
     picasso_version = "2.71828"
     circularImage_version = "3.1.0"
@@ -77,10 +78,10 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.2.1'
     implementation 'androidx.navigation:navigation-ui-ktx:2.2.1'
     implementation 'androidx.annotation:annotation:1.1.0'
-    implementation 'com.google.firebase:firebase-auth:16.0.5'
+    //implementation 'com.google.firebase:firebase-auth:16.0.5'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'com.google.firebase:firebase-storage:16.0.4'
+    implementation "com.google.firebase:firebase-storage:$firebaseStorage_version"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -118,5 +119,6 @@ dependencies {
     implementation "androidx.cardview:cardview:$cardView_version"
     implementation "com.google.android.libraries.places:places:$googleMapsPlaces_version"
     implementation "com.google.android.gms:play-services-location:$googleMapsLocation_version"
+
 
 }

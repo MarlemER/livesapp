@@ -203,7 +203,6 @@ class LoginActivity : AppCompatActivity() {
             messagesUser.showToast(this,resources.getString(R.string.enter_email_continue))
             edtSigninEmail.error = resources.getString(R.string.enter_email_valid)
         }
-
     }
 
     private fun resetValidations()

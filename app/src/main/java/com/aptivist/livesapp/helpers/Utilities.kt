@@ -3,12 +3,6 @@ package com.aptivist.livesapp.helpers
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
-import android.widget.ImageView
-import java.io.ByteArrayOutputStream
-import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -58,6 +52,36 @@ open class Utilities {
 
     fun validationFieldsNewIncidence(optionAddNewIncidence:Int?, latitude:Double?, longitude:Double?, dateTime:String?):Boolean{
         return optionAddNewIncidence!=null && longitude!=null && latitude!=null && dateTime!= null
+    }
+
+    fun convertIncidenceName(itemSelected:Int):String{
+        return when(itemSelected<=10) {
+                itemSelected == (1) -> "Stolen"
+                itemSelected == (2)-> "Homicid"
+                itemSelected == (3)-> "IlegalSales"
+                itemSelected == (4)-> "Misplacement"
+                itemSelected == (5)-> "Atack"
+                itemSelected == (6)-> "Accident"
+                itemSelected == (7)-> "Shoplifting"
+                itemSelected == (8)-> "Vandalism"
+                itemSelected == (9)-> "Other"
+            else -> "No found"
+        }
+    }
+
+    fun convertEnumIncidenceName(itemSelected:Int):String{
+        return when(EnumIncidenceType.values().size<=10) {
+            itemSelected==1-> EnumIncidenceType.Stole.incidenceName()
+            itemSelected==2-> EnumIncidenceType.Homicid.incidenceName()
+            itemSelected==3-> EnumIncidenceType.IlegalSales.incidenceName()
+            itemSelected==4-> EnumIncidenceType.Misplacement.incidenceName()
+            itemSelected==5-> EnumIncidenceType.Atack.incidenceName()
+            itemSelected==6-> EnumIncidenceType.Accident.incidenceName()
+            itemSelected==7-> EnumIncidenceType.Shoplifting.incidenceName()
+            itemSelected==8-> EnumIncidenceType.Vandalism.incidenceName()
+            itemSelected==9-> EnumIncidenceType.Other.incidenceName()
+            else -> "No found"
+        }
     }
 
 }

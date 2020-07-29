@@ -6,13 +6,14 @@ enum class EnumUser {
 }
 
 enum class EnumIncidenceType(type:Int){
-    Stole(1),
-    Homicid(2),
-    IlegalSales(3),
-    Misplacement(4),
-    Atack(5),
-    Accident(6),
-    Shoplifting(7),
-    Vandalism(8),
-    Other(9)
+    Stole(1){ override fun incidenceName()="Stolen" },
+    Homicid(2){ override fun incidenceName()="Homicid" },
+    IlegalSales(3){ override fun incidenceName()="IlegalSales" },
+    Misplacement(4){ override fun incidenceName()="Misplacement" },
+    Atack(5){ override fun incidenceName()="Atack" },
+    Accident(6){ override fun incidenceName()="Accident" },
+    Shoplifting(7){ override fun incidenceName()="Shoplifting" },
+    Vandalism(8){ override fun incidenceName()="Vandalism" },
+    Other(9){ override fun incidenceName()="Other"};
+    abstract fun incidenceName(): String
 }

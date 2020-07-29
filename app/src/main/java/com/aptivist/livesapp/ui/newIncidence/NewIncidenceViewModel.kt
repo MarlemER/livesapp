@@ -3,14 +3,20 @@ package com.aptivist.livesapp.ui.newIncidence
 import android.net.Uri
 import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
+import bolts.Bolts
 import com.aptivist.livesapp.BaseViewModel
-import com.aptivist.livesapp.di.interfaces.IUploadImageService
+import com.aptivist.livesapp.di.interfaces.IUploadDataService
+import com.aptivist.livesapp.model.IncidenceData
 
-class NewIncidenceViewModel(private val imageService:IUploadImageService) : BaseViewModel() {
+class NewIncidenceViewModel(private val dataService:IUploadDataService) : BaseViewModel() {
     private val saveImage = MutableLiveData<String>()
+    private val saveNewIncidence = MutableLiveData<Boolean>()
+    private val dataIncidence = MutableLiveData<IncidenceData>()
+    val isProgress:MutableLiveData<Boolean>? = MutableLiveData<Boolean>()
 
-    fun uploadImage(uri: Uri){
-        saveImage.value = imageService.uploadImage(uri)
+    fun uploadImage(uri: Uri):String?{
+       saveImage.value = dataService.uploadImage(uri)
+        return saveImage.value
     }
     fun getImageURL(imageView: ImageView){
         if(saveImage.value!=null || saveImage.value==""){
@@ -18,5 +24,19 @@ class NewIncidenceViewModel(private val imageService:IUploadImageService) : Base
         }else{
             setImage(imageView,saveImage.value)
         }
+    }
+    fun saveDBnewInicidence(newIncidence:IncidenceData):Boolean{
+        isProgress?.value = true
+        var isSuccess:Boolean = false
+        try {
+           isSuccess = dataService.uploadData(newIncidence)
+            isSuccess = true
+        }catch (ex:Exception){
+            ex.printStackTrace()
+        }
+        finally {
+            isProgress?.value = false
+        }
+        return isSuccess
     }
 }

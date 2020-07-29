@@ -12,7 +12,7 @@
             type="com.aptivist.livesapp.ui.newIncidence.NewIncidenceFragment" />
         <variable
             name="view"
-            type="com.aptivist.livesapp.BaseActivity" />
+            type="com.aptivist.livesapp.BaseFragment" />
     </data>
 
     <LinearLayout
@@ -422,7 +422,7 @@
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSaveIncident"
+                android:id="@+id/btnSaveIncidentData"
                 style="@style/Widget.MaterialComponents.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -432,7 +432,6 @@
                 app:cornerRadius="1sp"
                 app:icon="@drawable/ic_next"
                 app:iconGravity="end"
-                android:onClick="@{()->view.pictureImageFromGallery()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"></com.google.android.material.button.MaterialButton>
