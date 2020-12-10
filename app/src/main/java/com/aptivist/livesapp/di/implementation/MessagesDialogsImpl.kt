@@ -7,8 +7,10 @@ import android.content.DialogInterface
 import android.graphics.drawable.Drawable
 import android.view.ContextThemeWrapper
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -130,12 +132,15 @@ class MessagesDialogsImpl:IMessagesDialogs, Utilities() {
                 var bundle = bundleOf("dataClassNewIncidence" to messageConfirmation)
                 var navController: NavController = view.findNavController()
                 navController.navigate(R.id.goToHomeMap, bundle)
+                //progressBar.visibility = View.VISIBLE
                 showToast(context,messageConfirmation)
+                dialog.dismiss()
                 listener.onPositiveClick()
             })
             .setNegativeButton(setTitleNegativeButton){ dialog:DialogInterface, _i:Int ->
                 if (message != null) {
                     showToast(context,messageCancel)
+                    dialog.dismiss()
                     listener.onCancelClick()
                 }
             }

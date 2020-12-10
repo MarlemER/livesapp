@@ -12,6 +12,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.view.*
 import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
@@ -25,6 +26,7 @@ import com.aptivist.livesapp.R
 import com.aptivist.livesapp.databinding.NewIncidenceFragmentBinding
 import com.aptivist.livesapp.di.implementation.MessagesDialogsImpl
 import com.aptivist.livesapp.di.interfaces.IFirebaseInstance
+import com.aptivist.livesapp.di.interfaces.IFirebaseResult
 import com.aptivist.livesapp.di.interfaces.IMessagesDialogs
 import com.aptivist.livesapp.helpers.Constants.Companion.HEIGHT_PICTURE_NEW_INCIDENCE
 import com.aptivist.livesapp.helpers.Constants.Companion.REQUEST_CODE_CAMERA
@@ -40,6 +42,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.new_incidence_fragment.*
+import kotlinx.android.synthetic.main.progress_dialog.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.io.File
@@ -64,6 +67,7 @@ class NewIncidenceFragment : BaseFragment(),MessagesDialogsImpl.OnContinueCancel
     val readStorage = android.Manifest.permission.READ_EXTERNAL_STORAGE
     private lateinit var url: String
     lateinit var navController: NavController
+    var progressBar: ProgressBar? = null
     var itemSelected: Int = 0
     var itemSelectedName:String=""
     lateinit var binding: NewIncidenceFragmentBinding
@@ -98,6 +102,7 @@ class NewIncidenceFragment : BaseFragment(),MessagesDialogsImpl.OnContinueCancel
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = view.findNavController()
+        progressBar = view.findViewById(R.id.progressBar)
         btnOpenDate.setOnClickListener {
             var c = Calendar.getInstance()
             var datePicker = DatePickerDialog(
@@ -290,13 +295,17 @@ class NewIncidenceFragment : BaseFragment(),MessagesDialogsImpl.OnContinueCancel
         var currentUser = entitiesFirebase.getFirebaseAuth().currentUser
         //var currentUser = FirebaseUser? = FirebaseAuth.getInstance().currentUser
         var urlImage = incidenceViewModel.uploadImage(uri)
-        var incidence=IncidenceData(itemSelected,itemSelectedName,urlImage,longitude,latitude,txtDateTime.text.toString(),currentUser?.uid)
-        var saveSuccessfull:Boolean = incidenceViewModel.saveDBnewInicidence(incidence)
-        if(saveSuccessfull){
-            messageUser.showToast(activity!!,resources.getString(R.string.save__button_successful))
-        }else{
-            messageUser.showToast(activity!!,resources.getString(R.string.transation_cancel))
-        }
+        var incidence=IncidenceData(itemSelected,itemSelectedName,urlImage,longitude,latitude,txtDateTime.text.toString(),currentUser?.uid,txtRemark.text.toString())
+        //DIALOG PROGRESS DIMISS
+        incidenceViewModel.saveDBnewInicidence(incidence,object:IFirebaseResult{
+            override fun onSuccess() {
+                messageUser.showToast(activity!!,resources.getString(R.string.save__button_successful))
+               // DILOGOD.DIMISS
+            }
+            override fun onFailed() {
+                messageUser.showToast(activity!!,resources.getString(R.string.transation_cancel))
+            }
+        })
     }
 
     override fun onPositiveClick() {

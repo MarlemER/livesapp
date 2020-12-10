@@ -2,6 +2,7 @@ package com.aptivist.livesapp.di.implementation
 
 import android.net.Uri
 import android.util.Log
+import com.aptivist.livesapp.di.interfaces.IFirebaseResult
 import com.aptivist.livesapp.di.interfaces.IUploadDataService
 import com.aptivist.livesapp.helpers.Constants.Companion.INCIDENCE_ENTITY_DB
 import com.aptivist.livesapp.model.IncidenceData
@@ -9,7 +10,9 @@ import com.google.android.gms.tasks.Tasks.await
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
 import org.koin.java.KoinJavaComponent.inject
@@ -31,27 +34,30 @@ class UploadIncidenceImpl(private val mStorageReference: StorageReference, priva
         return  downloadURL
     }
 
-    override fun uploadData(newIncidenceData: IncidenceData): Boolean {
+    override fun uploadData(newIncidenceData: IncidenceData, iFirebaseResult: IFirebaseResult) {
        // var database=FirebaseDatabase.getInstance().reference
         val database = dbReference
-        var insertIncidence:Boolean = false
         //var reference: DatabaseReference = database.getReference("server/saving-data/fireblog")
         //val reference:DatabaseReference = database.reference.child("Incidence")
-         runBlocking(Dispatchers.IO) {
-                try {
-                    database.child(INCIDENCE_ENTITY_DB).child(newIncidenceData.idUser.toString()).child(UUID.randomUUID().toString()).setValue(IncidenceData(newIncidenceData.idIncidence,newIncidenceData.nameIncidence,newIncidenceData.pictureUrl,newIncidenceData.locationLongitude,newIncidenceData.locationLatitude,newIncidenceData.dateTime,newIncidenceData.idUser))
-                        .addOnSuccessListener {
-                           insertIncidence = true
+                        try {
+                        database.child(INCIDENCE_ENTITY_DB)
+                            .child(newIncidenceData.idUser.toString())
+                            .child(UUID.randomUUID().toString()).setValue(
+                            IncidenceData(newIncidenceData.idIncidence,newIncidenceData.nameIncidence,newIncidenceData.pictureUrl,
+                                newIncidenceData.locationLongitude,newIncidenceData.locationLatitude,newIncidenceData.dateTime,newIncidenceData.idUser,newIncidenceData.remark
+                            )
+                        )
+                            .addOnSuccessListener {
+                                iFirebaseResult.onSuccess()
+                            }
+                            .addOnFailureListener {
+                                iFirebaseResult.onFailed()
+                            }
+                        Log.d("*****", "Test db")
+                        }catch (ex:Exception){
+                            iFirebaseResult.onFailed()
                         }
-                        .addOnFailureListener {
-                           insertIncidence = false
-                        }
-                    Log.d("*****","Test db")
-                }catch (ex:Exception){
-                    null
-                }
-        }
-        return insertIncidence
+       // return insertIncidence
     }
 
 }

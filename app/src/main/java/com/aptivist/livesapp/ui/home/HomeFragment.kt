@@ -167,8 +167,13 @@ class HomeFragment : Fragment(),OnMapReadyCallback,SearchView.OnQueryTextListene
         return false
     }
 
+    override fun onResume() {
+        super.onResume()
+
+    }
+
     override fun onQueryTextChange(locationString: String?): Boolean {
-        if(!flagSearchLocation)
+        if(!flagSearchLocation && !locationString.isNullOrEmpty())
         {
             flagSearchLocation = true
             var list : List<Place.Field> = Arrays.asList(Place.Field.ADDRESS,Place.Field.LAT_LNG,Place.Field.NAME)

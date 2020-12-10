@@ -23,8 +23,8 @@ open class BaseFragment:Fragment(){
         )
         intent.type = ""
     }
-    fun saveIncidenceData(incidenceData: IncidenceData){
+   /* fun saveIncidenceData(incidenceData: IncidenceData){
         uploadIncidence.uploadData(incidenceData)
-    }
+    }*/
 
 }

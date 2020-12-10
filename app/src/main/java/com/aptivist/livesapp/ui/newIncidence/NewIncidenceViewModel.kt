@@ -5,6 +5,7 @@ import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 import bolts.Bolts
 import com.aptivist.livesapp.BaseViewModel
+import com.aptivist.livesapp.di.interfaces.IFirebaseResult
 import com.aptivist.livesapp.di.interfaces.IUploadDataService
 import com.aptivist.livesapp.model.IncidenceData
 
@@ -25,18 +26,8 @@ class NewIncidenceViewModel(private val dataService:IUploadDataService) : BaseVi
             setImage(imageView,saveImage.value)
         }
     }
-    fun saveDBnewInicidence(newIncidence:IncidenceData):Boolean{
+    fun saveDBnewInicidence(newIncidence:IncidenceData,iFirebaseResult: IFirebaseResult){
         progressVisible?.value = true
-        var isSuccess:Boolean = false
-        try {
-           isSuccess = dataService.uploadData(newIncidence)
-            isSuccess = true
-        }catch (ex:Exception){
-            ex.printStackTrace()
-        }
-        finally {
-            progressVisible?.value = false
-        }
-        return isSuccess
+            dataService.uploadData(newIncidence,iFirebaseResult)
     }
 }

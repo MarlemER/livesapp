@@ -5,5 +5,5 @@ import com.aptivist.livesapp.model.IncidenceData
 
 interface IUploadDataService {
     fun uploadImage(uri: Uri):String?
-    fun uploadData(newIncidenceData: IncidenceData):Boolean
+    fun uploadData(newIncidenceData: IncidenceData, iFirebaseResult: IFirebaseResult)
 }
